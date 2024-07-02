@@ -55,11 +55,12 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             [Required]
             public string PhoneNumber { get; set; }
 
+
             [Required]
             public string Address { get; set; }
 
-            //[Required]
-            //public DateTime Dob { get; set; }
+            [Required]
+            public DateTime Dob { get; set; }
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -94,7 +95,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     Email = Input.Email,
                     PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
-                   // Dob = Input.Dob,
+                    Dob = Input.Dob,
                     CreatedAt = DateTime.Now
                 };
                 //System.Diagnostics.Debug.WriteLine("---------" + Input.FirstName + "---------");
@@ -134,8 +135,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

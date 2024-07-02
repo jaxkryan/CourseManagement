@@ -1,6 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- bootstrap Style CSS File -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Custom Style CSS File -->
+    <link rel="stylesheet" type="text/css" href="css/custom-style.css">
+    <link rel="stylesheet" type="text/css" href="css/loaders.css" />
+    <!-- Font-Awesome Style CSS File -->
+    <link rel="stylesheet" type="text/css" href="font-awesome/css/font-awesome.min.css">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CourseManagement</title>
@@ -11,32 +18,46 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">CourseManagement</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
+        <nav class="navbar navbar-expand-md fixed-top top-nav">
+            <div class="container-fluid">
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><strong>EngLearn</strong></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"><img src="~/img/icons/menu.png"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav m-auto text-sm-center text-md-center">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                            <a class="nav-link" asp-area="" asp-page="/Index">Home <span class="sr-only">(current)</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                            <a class="nav-link" href="#services">Courses</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#about">About Us</a>
+                        </li>
+@*                         <li class="nav-item">
+                            <a class="nav-link" href="#price"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#testimonial">Testimonials</a>
+                        </li> *@
+                        <li class="nav-item">
+                            <a class="nav-link" href="#contact">Contact</a>
                         </li>
                     </ul>
-                    <partial name ="_LoginPartial"/>
                 </div>
+                <ul class="navbar-nav ml-auto search-box">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fa fa-search text-white"></i></a>
+                    </li>
+                </ul>
+                <partial name="_LoginPartial" />
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
             @RenderBody()
-        </main>
-    </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
