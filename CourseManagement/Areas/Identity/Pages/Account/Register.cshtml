@@ -1,6 +1,7 @@
 ﻿@page
 @model RegisterModel
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
 }
 
@@ -42,6 +43,14 @@
                 <div class="col-sm-8">
                     <input asp-for="Input.Address" class="form-control" />
                     <span asp-validation-for="Input.Address" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <label class="col-sm-4 col-form-label">Date of birth</label>
+                <div class="col-sm-8">
+                    <input asp-for="Input.Dob" type="date" class="form-control" />
+                    <span asp-validation-for="Input.Dob" class="text-danger"></span>
                 </div>
             </div>
 

@@ -86,6 +86,25 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var roles = await _userManager.GetRolesAsync(user);
+
+                    if (roles.Contains("student"))
+                    {
+                        returnUrl = "/Student/Index";
+                    }
+                    else if (roles.Contains("admin"))
+                    {
+                        returnUrl = "/Admin/Index";
+                    }
+                    else if (roles.Contains("teacher"))
+                    {
+                        returnUrl = "/Teacher/Index";
+                    }
+                    else if (roles.Contains("parent"))
+                    {
+                        returnUrl = "/Parent/Index";
+                    }
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)
@@ -103,8 +122,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
-
-            // If we got this far, something failed, redisplay form
             return Page();
         }
     }

@@ -7,6 +7,12 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<None Include="wwwroot\font-awesome\fonts\fontawesome-webfont.svg" />
+		<None Include="wwwroot\font-awesome\fonts\fontawesome-webfont.woff2" />
+		<None Include="wwwroot\img\brand\logo.svg" />
+		<None Include="wwwroot\img\brand\sygnet.svg" />
+		<None Include="wwwroot\js\site.js" />
+		<None Include="wwwroot\js\site.min.js" />
 		<None Include="wwwroot\lib\coreui\css\coreui-icons.css.map" />
 		<None Include="wwwroot\lib\coreui\css\coreui-icons.min.css.map" />
 		<None Include="wwwroot\lib\coreui\css\style.css.map" />
@@ -100,12 +106,6 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
 		<PackageReference Include="NSwag.AspNetCore" Version="13.3.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Areas\Admin\" />
-	  <Folder Include="Areas\Teacher\" />
-	  <Folder Include="Areas\Student\" />
 	</ItemGroup>
 	
 </Project>

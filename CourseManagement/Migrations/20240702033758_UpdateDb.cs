@@ -231,6 +231,21 @@ namespace CourseManagement.Migrations
                 name: "IX_Submissions_UserId",
                 table: "Submissions",
                 column: "UserId");
+
+            migrationBuilder.AddColumn<string>(
+      name: "Image",
+      table: "AspNetUsers",
+      nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Image",
+                table: "Courses",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Link",
+                table: "Lessons",
+                nullable: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -258,6 +273,17 @@ namespace CourseManagement.Migrations
 
             migrationBuilder.DropTable(
                 name: "Courses");
+            migrationBuilder.DropColumn(
+    name: "Image",
+    table: "AspNetUsers");
+
+            migrationBuilder.DropColumn(
+                name: "Image",
+                table: "Courses");
+
+            migrationBuilder.DropColumn(
+                name: "Link",
+                table: "Lessons");
         }
     }
 }
