@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace CourseManagement.Pages.Service
 {
@@ -11,6 +12,15 @@ namespace CourseManagement.Pages.Service
         {
 
         }
+
+        public DbSet<Enrollment> Enrollments { get; set; }
+        public DbSet<Course> Courses { get; set; }
+        public DbSet<Lesson> Lessons { get; set; }
+        public DbSet<Assignment> Assignments { get; set; }
+        public DbSet<Submission> Submissions { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<Admin> Admins { get; set; }
+        public DbSet<Parent> Parents { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,6 +42,59 @@ namespace CourseManagement.Pages.Service
             admin.NormalizedName = "admin";
 
             builder.Entity<IdentityRole>().HasData(guest, student, teacher, parent, admin);
+            builder.Entity<Enrollment>()
+               .HasOne(e => e.User)
+               .WithMany(u => u.Enrollments)
+               .HasForeignKey(e => e.UserId);
+
+            builder.Entity<Enrollment>()
+                .HasOne(e => e.Course)
+                .WithMany(c => c.Enrollments)
+                .HasForeignKey(e => e.CourseId);
+
+            builder.Entity<Lesson>()
+                .HasOne(l => l.Course)
+                .WithMany(c => c.Lessons)
+                .HasForeignKey(l => l.CourseId);
+
+            builder.Entity<Assignment>()
+                .HasOne(a => a.Course)
+                .WithMany(c => c.Assignments)
+                .HasForeignKey(a => a.CourseId);
+
+            builder.Entity<Submission>()
+                .HasOne(s => s.Assignment)
+                .WithMany(a => a.Submissions)
+                .HasForeignKey(s => s.AssignmentId);
+
+            builder.Entity<Submission>()
+                .HasOne(s => s.User)
+                .WithMany(u => u.Submissions)
+                .HasForeignKey(s => s.UserId);
+
+            builder.Entity<Submission>()
+                .Property(s => s.Grade)
+                .HasColumnType("float");
+
+            builder.Entity<Teacher>()
+                .HasOne(t => t.User)
+                .WithOne(u => u.Teacher)
+                .HasForeignKey<Teacher>(t => t.TeacherId);
+
+            builder.Entity<Admin>()
+                .HasOne(a => a.User)
+                .WithOne(u => u.Admin)
+                .HasForeignKey<Admin>(a => a.AdminId);
+
+            builder.Entity<Parent>()
+                .HasOne(p => p.User)
+                .WithOne(u => u.Parent)
+                .HasForeignKey<Parent>(p => p.ParentId);
+
+            builder.Entity<Parent>()
+                .HasOne(p => p.Student)
+                .WithMany()
+                .HasForeignKey(p => p.StudentId);
         }
     }
 }
