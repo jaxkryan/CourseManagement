@@ -1,0 +1,30 @@
+﻿@page
+@model CourseManagement.Pages.StudentModel
+@{
+}
+<h2>Student</h2>
+<div>
+    First Name: @Model.webUser?.FirstName
+</div>
+
+<div>
+    Last Name: @Model.webUser?.LastName
+</div>
+
+<div>
+    Email: @Model.webUser?.Email
+</div>
+
+<div>
+    Phone: @Model.webUser?.PhoneNumber
+</div>
+
+<div>
+    Address: @Model.webUser?.Address
+</div>
+
+<div>
+    Created At: @Model.webUser?.CreatedAt.ToString("MM/dd/yyyy")
+</div>
+
+
