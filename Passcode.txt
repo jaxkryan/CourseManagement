@@ -1,0 +1,11 @@
+Teacher:
+abcdef@gmail.com
+Aa@123
+
+Parent:
+qwerty@gmail.com
+Aa@123
+
+Student:
+bac@gmail.com
+Aa@123
