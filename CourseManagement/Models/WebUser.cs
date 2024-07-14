@@ -63,6 +63,7 @@ public class WebUser : IdentityUser
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? Link { get; set; }
+        public string Level { get; set; }
     }
     public class Assignment
     {
@@ -126,5 +127,16 @@ public class WebUser : IdentityUser
         [ForeignKey("Student")]
         public string StudentId { get; set; }
         public WebUser Student { get; set; }
+    }
+
+    public class Question
+    {
+        [Key]
+        public int Qid { get; set; }
+        public string QContent { get; set; }
+        public string Opt1 { get; set; }
+        public string Opt2 { get; set; }
+        public string Opt3 { get; set; }
+        public string Opt4 { get; set; }
     }
 }
