@@ -48,8 +48,8 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-                return Redirect("~/");
-            }
+				return Redirect("/Student/Index");
+			}
             else
             {
                 StatusMessage = "Lỗi xác nhận email";

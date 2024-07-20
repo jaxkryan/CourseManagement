@@ -103,7 +103,17 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                 var result = await _userManager.CreateAsync(user, Input.Password);
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("Create acc successfully");
+					var roleResult = await _userManager.AddToRoleAsync(user, "student");
+					if (!roleResult.Succeeded)
+					{
+						// Handle role assignment failure
+						foreach (var error in roleResult.Errors)
+						{
+							ModelState.AddModelError(string.Empty, error.Description);
+						}
+						return Page();
+					}
+					_logger.LogInformation("Create acc successfully");
                     // phát sinh token theo thông tin user để xác nhận email
                     // mỗi user dựa vào thông tin sẽ có một mã riêng, mã này nhúng vào link
                     // trong email gửi đi để người dùng xác nhận
@@ -114,22 +124,22 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     // Link trong email người dùng bấm vào, nó sẽ gọi Page: /Acount/ConfirmEmail để xác nhận
                     var roles = await _userManager.GetRolesAsync(user);
 
-                    if (roles.Contains("student"))
-                    {
-                        returnUrl = "/Student/Index";
-                    }
-                    else if (roles.Contains("admin"))
-                    {
-                        returnUrl = "/Admin/Index";
-                    }
-                    else if (roles.Contains("teacher"))
-                    {
-                        returnUrl = "/Teacher/Index";
-                    }
-                    else if (roles.Contains("parent"))
-                    {
-                        returnUrl = "/Parent/Index";
-                    }
+                    //if (roles.Contains("student"))
+                    //{
+                    //    returnUrl = "/Student/Index";
+                    //}
+                    //else if (roles.Contains("admin"))
+                    //{
+                    //    returnUrl = "/Admin/Index";
+                    //}
+                    //else if (roles.Contains("teacher"))
+                    //{
+                    //    returnUrl = "/Teacher/Index";
+                    //}
+                    //else if (roles.Contains("parent"))
+                    //{
+                    //    returnUrl = "/Parent/Index";
+                    //}
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
