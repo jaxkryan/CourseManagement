@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using MimeKit;
 using System.ComponentModel.DataAnnotations;
 
 namespace CourseManagement.Areas.Identity.Pages.Account
@@ -36,15 +37,17 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 
         public class InputModel
         {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
+            [Required(ErrorMessage = "Không để trống")]
+            [Display(Name = "Nhập username hoặc email của bạn")]
+            [StringLength(100, MinimumLength = 1, ErrorMessage = "Nhập đúng thông tin")]
+            public string UserNameOrEmail { set; get; }
 
             [Required]
             [DataType(DataType.Password)]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
-            [Display(Name = "Remember me?")]
+            [Display(Name = "Nhớ thông tin đăng nhập?")]
             public bool RememberMe { get; set; }
         }
 
@@ -65,12 +68,71 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
+        //    public async Task<IActionResult> OnPostAsync(string returnUrl = "~/")
+        //    {
+        //        returnUrl ??= Url.Content("~/");
+        //        ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
+        //        //This is not good..........
+        //        foreach (var e in ModelState)
+        //        {
+        //            if (ModelState[e.Key].ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+        //            {
+        //                ModelState[e.Key].ValidationState = Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Valid;
+        //            }
+        //        }
+        //        if (ModelState.IsValid)
+        //        {
+        //            // This doesn't count login failures towards account lockout
+        //            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        //            var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        //            if (result.Succeeded)
+        //            {
+        //                _logger.LogInformation("User logged in.");
+        //                var user = await _userManager.FindByEmailAsync(Input.Email);
+        //                var roles = await _userManager.GetRolesAsync(user);
+
+        //                if (roles.Contains("student"))
+        //                {
+        //                    returnUrl = "/Student/Index";
+        //                }
+        //                else if (roles.Contains("admin"))
+        //                {
+        //                    returnUrl = "/Admin/Index";
+        //                }
+        //                else if (roles.Contains("teacher"))
+        //                {
+        //                    returnUrl = "/Teacher/Index";
+        //                }
+        //                else if (roles.Contains("parent"))
+        //                {
+        //                    returnUrl = "/Parent/Index";
+        //                }
+        //                return LocalRedirect(returnUrl);
+        //            }
+        //            if (result.RequiresTwoFactor)
+        //            {
+        //                return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+        //            }
+        //            if (result.IsLockedOut)
+        //            {
+        //                _logger.LogWarning("User account locked out.");
+        //                return RedirectToPage("./Lockout");
+        //            }
+        //            else
+        //            {
+        //                ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+        //                return Page();
+        //            }
+        //        }
+        //        return Page();
+        //    }
         public async Task<IActionResult> OnPostAsync(string returnUrl = "~/")
         {
-            returnUrl ??= Url.Content("~/");
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
-            //This is not good..........
+            returnUrl = returnUrl ?? Url.Content("~/");
+            // Đã đăng nhập nên chuyển hướng về Index
+            if (_signInManager.IsSignedIn(User)) return Redirect("Index");
+            //d hieu sao bo cai nay di thi sai?
             foreach (var e in ModelState)
             {
                 if (ModelState[e.Key].ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
@@ -80,15 +142,39 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             }
             if (ModelState.IsValid)
             {
-                // This doesn't count login failures towards account lockout
-                // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                // Thử login bằng username/password
+                var result = await _signInManager.PasswordSignInAsync(
+                    Input.UserNameOrEmail,
+                    Input.Password,
+                    Input.RememberMe,
+                    true
+                );
+
+                if (!result.Succeeded)
+                {
+                    // Thất bại username/password -> tìm user theo email, nếu thấy thì thử đăng nhập
+                    // bằng user tìm được
+                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                    if (user != null)
+                    {
+                        result = await _signInManager.PasswordSignInAsync(
+                            user,
+                            Input.Password,
+                            Input.RememberMe,
+                            true
+                        );
+                    }
+                }
+
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+                    if (user == null)
+                    {
+                        user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                    }
                     var roles = await _userManager.GetRolesAsync(user);
-
                     if (roles.Contains("student"))
                     {
                         returnUrl = "/Student/Index";
@@ -109,19 +195,23 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                 }
                 if (result.RequiresTwoFactor)
                 {
+                    // Nếu cấu hình đăng nhập hai yếu tố thì chuyển hướng đến LoginWith2fa
                     return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    _logger.LogWarning("Tài khoản bí tạm khóa.");
+                    // Chuyển hướng đến trang Lockout - hiện thị thông báo
                     return RedirectToPage("./Lockout");
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
+                    ModelState.AddModelError(string.Empty, "Không đăng nhập được.");
                     return Page();
                 }
             }
+
+            // If we got this far, something failed, redisplay form
             return Page();
         }
     }
