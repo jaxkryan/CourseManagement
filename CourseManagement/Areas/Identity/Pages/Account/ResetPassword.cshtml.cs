@@ -78,6 +78,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             var result = await _userManager.ResetPasswordAsync(user, Input.Code, Input.Password);
             if (result.Succeeded)
             {
+                await _userManager.UpdateSecurityStampAsync(user);
                 return RedirectToPage("./ResetPasswordConfirmation");
             }
 

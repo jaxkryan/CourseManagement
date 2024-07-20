@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using CourseManagement.EmailSender;
 
 namespace CourseManagement.Areas.Identity.Pages.Account
 {
@@ -18,9 +19,9 @@ namespace CourseManagement.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<WebUser> _userManager;
-        private readonly IEmailSender _emailSender;
+        private readonly ISendMailService _emailSender;
 
-        public ForgotPasswordModel(UserManager<WebUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(UserManager<WebUser> userManager, ISendMailService emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;
