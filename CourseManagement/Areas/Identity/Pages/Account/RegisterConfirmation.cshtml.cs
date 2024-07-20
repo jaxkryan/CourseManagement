@@ -29,7 +29,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
         {
             if (email == null)
             {
-                return RedirectToPage("/Index");
+                return RedirectToPage("~/");
             }
 
 
@@ -41,7 +41,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 
             if (user.EmailConfirmed)
             {
-                String urlredirect = (returnUrl != null) ? returnUrl : Url.Page("/Index");
+                String urlredirect = (returnUrl != null) ? returnUrl : Url.Page("~/");
                 // Tài khoản đã xác thực email
                 return RedirectToPage(urlredirect);
             }
