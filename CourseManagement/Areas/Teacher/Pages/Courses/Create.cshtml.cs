@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.CodeAnalysis;
+using System.Diagnostics;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
@@ -15,21 +18,19 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
 
-        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+        private readonly UserManager<WebUser> _userManager;
+        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
-            List<WebUser> teacherUsers = _context.Users
-      .Where(u => u.Teacher != null)
-      .Include(u=> u.Teacher)
-      .ToList();
-
-            ViewData["InstructorId"] = new SelectList(teacherUsers, "Id", "Id");
+            ViewData["InstructorId"] = new SelectList(_context.Users, "Id", "LastName");
             return Page();
         }
+       
 
         [BindProperty]
         public Course Course { get; set; }
@@ -39,6 +40,12 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState
+    .Where(x => x.Value.Errors.Count > 0)
+    .Select(x => new { x.Key, x.Value.Errors })
+    .ToArray();
+                Console.WriteLine(errors);
+
                 return Page();
             }
 

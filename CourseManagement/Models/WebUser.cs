@@ -29,12 +29,12 @@ public class WebUser : IdentityUser
 
         [ForeignKey("Instructor")]
         public string InstructorId { get; set; }
-        public WebUser Instructor { get; set; }
+        public WebUser? Instructor { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? Image { get; set; } 
-        public virtual ICollection<Lesson> Lessons { get; set; }
-        public virtual ICollection<Assignment> Assignments { get; set; }
-        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public virtual ICollection<Lesson>? Lessons { get; set; }
+        public virtual ICollection<Assignment>? Assignments { get; set; }
+        public virtual ICollection<Enrollment>? Enrollments { get; set; }
     }
 
     public class Enrollment
@@ -57,7 +57,7 @@ public class WebUser : IdentityUser
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
 
         public string LessonTitle { get; set; }
         public string Content { get; set; }
@@ -84,10 +84,10 @@ public class WebUser : IdentityUser
     public class AssignmentQuestion
     {
         public int AssignmentId { get; set; }
-        public Assignment Assignment { get; set; }
+        public Assignment? Assignment { get; set; }
 
         public int QuestionId { get; set; }
-        public Question Question { get; set; }
+        public Question? Question { get; set; }
     }
     public class Submission
     {
@@ -147,6 +147,6 @@ public class WebUser : IdentityUser
         public string Opt3 { get; set; }
         public string Opt4 { get; set; }
         public string Correctans { get; set; }
-        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
+        public virtual ICollection<AssignmentQuestion>? AssignmentQuestions { get; set; } // New navigation property
     }
 }

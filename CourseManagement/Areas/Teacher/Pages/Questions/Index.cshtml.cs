@@ -19,11 +19,14 @@ namespace CourseManagement.Areas.Teacher.Pages.Questions
             _context = context;
         }
 
-        public IList<Question> Question { get;set; }
+        public IList<Question> Question { get;set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Question = await _context.Questions.ToListAsync();
+            if (_context.Questions != null)
+            {
+                Question = await _context.Questions.ToListAsync();
+            }
         }
     }
 }

@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
+using System.Diagnostics;
+using Microsoft.CodeAnalysis;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
@@ -37,11 +39,9 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             {
                 return NotFound();
             }
-            List<WebUser> teacherUsers = _context.Users
-  .Where(u => u.Teacher != null)
-  .ToList();
-            ViewData["InstructorId"] = new SelectList(teacherUsers, "Id", "Id");
+            ViewData["InstructorId"] = new SelectList(_context.Users, "Id", "Id");
             return Page();
+
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -50,6 +50,11 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
         {
             if (!ModelState.IsValid)
             {
+                var errors = ModelState
+    .Where(x => x.Value.Errors.Count > 0)
+    .Select(x => new { x.Key, x.Value.Errors })
+    .ToArray();
+                ViewData["InstructorId"] = errors;
                 return Page();
             }
 

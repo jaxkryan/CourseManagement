@@ -19,20 +19,23 @@ namespace CourseManagement.Areas.Teacher.Pages.Questions
             _context = context;
         }
 
-        public Question Question { get; set; }
+      public Question Question { get; set; } = default!; 
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Questions == null)
             {
                 return NotFound();
             }
 
-            Question = await _context.Questions.FirstOrDefaultAsync(m => m.Qid == id);
-
-            if (Question == null)
+            var question = await _context.Questions.FirstOrDefaultAsync(m => m.Qid == id);
+            if (question == null)
             {
                 return NotFound();
+            }
+            else 
+            {
+                Question = question;
             }
             return Page();
         }

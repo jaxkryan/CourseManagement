@@ -25,13 +25,19 @@ namespace CourseManagement.Areas.Teacher.Pages.Questions
         }
 
         [BindProperty]
-        public Question Question { get; set; }
+        public Question Question { get; set; } = default!;
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
+            if (!ModelState.IsValid || _context.Questions == null || Question == null)
             {
+                var errors = ModelState
+ .Where(x => x.Value.Errors.Count > 0)
+ .Select(x => new { x.Key, x.Value.Errors })
+ .ToArray();
+                Console.WriteLine("___________________" + errors);
                 return Page();
             }
 

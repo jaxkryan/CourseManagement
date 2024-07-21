@@ -110,5 +110,7 @@ namespace CourseManagement.Pages.Service
                 .WithMany(q => q.AssignmentQuestions)
                 .HasForeignKey(aq => aq.QuestionId);
         }
+
+        public DbSet<CourseManagement.Models.AssignmentQuestion>? AssignmentQuestion { get; set; }
     }
  }

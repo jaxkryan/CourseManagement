@@ -20,35 +20,39 @@ namespace CourseManagement.Areas.Teacher.Pages.Questions
         }
 
         [BindProperty]
-        public Question Question { get; set; }
+      public Question Question { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Questions == null)
             {
                 return NotFound();
             }
 
-            Question = await _context.Questions.FirstOrDefaultAsync(m => m.Qid == id);
+            var question = await _context.Questions.FirstOrDefaultAsync(m => m.Qid == id);
 
-            if (Question == null)
+            if (question == null)
             {
                 return NotFound();
+            }
+            else 
+            {
+                Question = question;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null)
+            if (id == null || _context.Questions == null)
             {
                 return NotFound();
             }
+            var question = await _context.Questions.FindAsync(id);
 
-            Question = await _context.Questions.FindAsync(id);
-
-            if (Question != null)
+            if (question != null)
             {
+                Question = question;
                 _context.Questions.Remove(Question);
                 await _context.SaveChangesAsync();
             }
