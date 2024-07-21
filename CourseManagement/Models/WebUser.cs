@@ -79,8 +79,16 @@ public class WebUser : IdentityUser
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<Submission> Submissions { get; set; }
+        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
     }
+    public class AssignmentQuestion
+    {
+        public int AssignmentId { get; set; }
+        public Assignment Assignment { get; set; }
 
+        public int QuestionId { get; set; }
+        public Question Question { get; set; }
+    }
     public class Submission
     {
         public int SubmissionId { get; set; }
@@ -138,5 +146,7 @@ public class WebUser : IdentityUser
         public string Opt2 { get; set; }
         public string Opt3 { get; set; }
         public string Opt4 { get; set; }
+
+        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
     }
 }
