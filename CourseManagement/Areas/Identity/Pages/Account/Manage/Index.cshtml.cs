@@ -110,7 +110,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
             user.Dob = Input.Birthday;
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
-            Console.WriteLine("-------------------------------------" + Input.Birthday);
+            //Console.WriteLine("-------------------------------------" + Input.Birthday);
             if (Input.Image != null)
             {
                 user.Image = Input.Image;
