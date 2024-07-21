@@ -3,37 +3,39 @@
 @{
     ViewData["Title"] = "Profile";
     ViewData["ActivePage"] = ManageNavPages.Index;
-}<h4>@ViewData["Title"]</h4>
+}
+<h4>@ViewData["Title"]</h4>
+<partial name="_StatusMessage" model="Model.StatusMessage" />
 <div class="row">
     <div class="col-md-6">
-        <form id="profile-form" method="post">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Username"></label>
+                <label asp-for="Username">Username</label>
                 <input asp-for="Username" class="form-control" disabled />
             </div>
             <div class="form-group">
-                <label asp-for="Input.FirstName"></label>
+                <label asp-for="Input.FirstName">First Name</label>
                 <input asp-for="Input.FirstName" class="form-control" />
                 <span asp-validation-for="Input.FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.LastName"></label>
+                <label asp-for="Input.LastName">Last Name</label>
                 <input asp-for="Input.LastName" class="form-control" />
                 <span asp-validation-for="Input.LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.Address"></label>
+                <label asp-for="Input.Address">Address</label>
                 <input asp-for="Input.Address" class="form-control" />
                 <span asp-validation-for="Input.Address" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.Birthday"></label>
-                @Html.TextBoxFor(m => m.Input.Birthday, "{0:d}", new { @class = "form-control" })
+                <label asp-for="Input.Birthday">Birthday</label>
+                @Html.EditorFor(m => m.Input.Birthday, new { htmlAttributes = new { @class = "form-control", @type = "date" } })
                 <span asp-validation-for="Input.Birthday" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Input.ImageFile"></label>
+                <label asp-for="Input.ImageFile">Image File</label>
                 <input asp-for="Input.ImageFile" type="file" class="form-control-file" />
                 <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
             </div>
@@ -45,4 +47,3 @@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }
-

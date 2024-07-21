@@ -1,10 +1,9 @@
 ﻿@page
 @model LoginModel
 @{
-    Layout = null; 
+    Layout = null;
     ViewData["Title"] = "Log in";
 }
-@* TODO: FIX LAYOUT!!!!!!!!!!!!!! *@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -13,6 +12,8 @@
                     <h2 class="text-center mb-4">Log in</h2>
                     <hr />
                     <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly"></div>
+                        <input type="hidden" asp-for="ReturnUrl" />
 
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">Email</label>
@@ -43,6 +44,25 @@
                             <a asp-page="./Register">Sign up</a>
                         </div>
                     </form>
+                </div>
+                <div class="col-md-6 col-md-offset-2">
+                    @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+                    {
+                        <section>
+                            <h4>Sử dụng dịch vụ</h4>
+                            <hr />
+                            <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                                <div>
+                                    <p>
+                                        @foreach (var provider in Model.ExternalLogins)
+                                        {
+                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                        }
+                                    </p>
+                                </div>
+                            </form>
+                        </section>
+                    }
                 </div>
             </div>
         </div>

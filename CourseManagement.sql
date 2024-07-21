@@ -1,6 +1,16 @@
 USE [master]
 GO
---drop database [CourseManagement]
+/*******************************************************************************
+   Drop database if it exists
+********************************************************************************/
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'CourseManagement')
+BEGIN
+	ALTER DATABASE [CourseManagement] SET OFFLINE WITH ROLLBACK IMMEDIATE;
+	ALTER DATABASE [CourseManagement] SET ONLINE;
+	DROP DATABASE [CourseManagement];
+END
+
+GO
 /****** Object:  Database [CourseManagement]    Script Date: 7/21/2024 3:03:43 PM ******/
 CREATE DATABASE [CourseManagement]
  
