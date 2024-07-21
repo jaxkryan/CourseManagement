@@ -96,6 +96,19 @@ namespace CourseManagement.Pages.Service
                 .HasOne(p => p.Student)
                 .WithMany()
                 .HasForeignKey(p => p.StudentId);
+
+            builder.Entity<AssignmentQuestion>()
+            .HasKey(aq => new { aq.AssignmentId, aq.QuestionId });
+
+            builder.Entity<AssignmentQuestion>()
+                .HasOne(aq => aq.Assignment)
+                .WithMany(a => a.AssignmentQuestions)
+                .HasForeignKey(aq => aq.AssignmentId);
+
+            builder.Entity<AssignmentQuestion>()
+                .HasOne(aq => aq.Question)
+                .WithMany(q => q.AssignmentQuestions)
+                .HasForeignKey(aq => aq.QuestionId);
         }
     }
-}
+ }

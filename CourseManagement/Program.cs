@@ -1,4 +1,4 @@
-﻿using CourseManagement.Models;
+using CourseManagement.Models;
 using CourseManagement.EmailSender;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
