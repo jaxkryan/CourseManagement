@@ -177,7 +177,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     var roles = await _userManager.GetRolesAsync(user);
                     if (roles.Contains("student"))
                     {
-                        returnUrl = "/Student/Index";
+                        returnUrl = "/StudentCourses";
                     }
                     else if (roles.Contains("admin"))
                     {
