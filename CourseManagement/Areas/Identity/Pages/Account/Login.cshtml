@@ -1,10 +1,9 @@
 ﻿@page
 @model LoginModel
 @{
-    Layout = null; 
+    Layout = null;
     ViewData["Title"] = "Log in";
 }
-@* TODO: FIX LAYOUT!!!!!!!!!!!!!! *@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-6">
@@ -13,6 +12,8 @@
                     <h2 class="text-center mb-4">Log in</h2>
                     <hr />
                     <form id="account" method="post">
+                        <div asp-validation-summary="ModelOnly"></div>
+                        <input type="hidden" asp-for="ReturnUrl" />
 
                         <div class="mb-3">
                             <label for="inputEmail" class="form-label">Email</label>
