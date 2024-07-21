@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using CourseManagement.Models;
 using System.IO;
 using System.Threading.Tasks;
-
+//TODO: DISPLAY IMAGE AND DOB WHEN CLICK ON VIEW INFORMATION
 namespace CourseManagement.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
@@ -22,6 +22,9 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
         }
 
         public string Username { get; set; }
+
+        [TempData]
+        public string StatusMessage { get; set; }
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -115,6 +118,8 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
 
             await _userManager.UpdateAsync(user);
 
+            await _signInManager.RefreshSignInAsync(user);
+            StatusMessage = "Update successfully";
             return RedirectToPage();
         }
     }
