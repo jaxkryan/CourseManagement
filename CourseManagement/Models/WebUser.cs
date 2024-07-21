@@ -146,7 +146,7 @@ public class WebUser : IdentityUser
         public string Opt2 { get; set; }
         public string Opt3 { get; set; }
         public string Opt4 { get; set; }
-
+        public string Correctans { get; set; }
         public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
     }
 }
