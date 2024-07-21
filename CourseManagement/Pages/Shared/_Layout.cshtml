@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Identity
+@using CourseManagement.Models
+@inject UserManager<WebUser> UserManager
+@inject SignInManager<WebUser> SignInManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8">
@@ -61,12 +66,32 @@
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
                 </div>
-                <a id="login" asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    var user = await UserManager.GetUserAsync(User);
+                    <div class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            <img src="@user.Image" alt="User Image" class="rounded-circle" style="width: 40px; height: 40px;"> @user.UserName
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <a href="Identity/Account/Manage" class="dropdown-item">Manage Account</a>
+                            <form asp-area="Identity" asp-page="/Account/Logout" method="post" class="dropdown-item">
+                                <button type="submit" class="btn btn-link">Logout</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <a id="login" asp-area="Identity" asp-page="/Account/Login" class="btn btn-primary py-4 px-lg-5 d-none d-lg-block">Join Now<i class="fa fa-arrow-right ms-3"></i></a>
+                }
             </div>
         </nav>
         <!-- Navbar End -->
     </header>
-        @RenderBody()
+
+    @RenderBody()
+
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
         <div class="container py-5">
