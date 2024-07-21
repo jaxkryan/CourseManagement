@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 
-namespace CourseManagement.Areas.Teacher.Pages.Assignments
+namespace CourseManagement.Areas.Teacher.Pages.Questions
 {
     public class EditModel : PageModel
     {
@@ -21,7 +21,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
         }
 
         [BindProperty]
-        public Assignment Assignment { get; set; }
+        public Question Question { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,14 +30,12 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
                 return NotFound();
             }
 
-            Assignment = await _context.Assignments
-                .Include(a => a.Course).FirstOrDefaultAsync(m => m.AssignmentId == id);
+            Question = await _context.Questions.FirstOrDefaultAsync(m => m.Qid == id);
 
-            if (Assignment == null)
+            if (Question == null)
             {
                 return NotFound();
             }
-           ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
             return Page();
         }
 
@@ -50,7 +48,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
                 return Page();
             }
 
-            _context.Attach(Assignment).State = EntityState.Modified;
+            _context.Attach(Question).State = EntityState.Modified;
 
             try
             {
@@ -58,7 +56,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!AssignmentExists(Assignment.AssignmentId))
+                if (!QuestionExists(Question.Qid))
                 {
                     return NotFound();
                 }
@@ -71,9 +69,9 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
             return RedirectToPage("./Index");
         }
 
-        private bool AssignmentExists(int id)
+        private bool QuestionExists(int id)
         {
-            return _context.Assignments.Any(e => e.AssignmentId == id);
+            return _context.Questions.Any(e => e.Qid == id);
         }
     }
 }

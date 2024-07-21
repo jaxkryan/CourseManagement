@@ -71,15 +71,15 @@ public class WebUser : IdentityUser
 
         [ForeignKey("Course")]
         public int CourseId { get; set; }
-        public Course Course { get; set; }
+        public Course? Course { get; set; }
 
         public string AssignmentTitle { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
-        public virtual ICollection<Submission> Submissions { get; set; }
-        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
+        public virtual ICollection<Submission>? Submissions { get; set; }
+        public virtual ICollection<AssignmentQuestion>? AssignmentQuestions { get; set; } // New navigation property
     }
     public class AssignmentQuestion
     {

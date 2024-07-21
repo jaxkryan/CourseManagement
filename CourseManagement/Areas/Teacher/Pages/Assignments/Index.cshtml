@@ -33,31 +33,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Assignment) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Course.CourseId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AssignmentTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
-            </td>
+        @foreach (var item in Model.Assignment)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AssignmentTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DueDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
                 <td>
                     <a asp-page="Edit" asp-route-id="@item.AssignmentId" class="btn btn-info">Edit</a>
                     <a asp-page="Details" asp-route-id="@item.AssignmentId" class="btn btn-secondary">Details</a>
-                    <form method="post" asp-page-handler="Delete" asp-route-id="@item.AssignmentId" class="d-inline">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
+                    <a asp-page="Delete" asp-route-id="@item.AssignmentId" class="btn btn-danger">Delete</a>
                 </td>
-        </tr>
-}
+            </tr>
+        }
     </tbody>
 </table>

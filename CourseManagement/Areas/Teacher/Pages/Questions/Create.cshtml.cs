@@ -7,9 +7,8 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
-using Microsoft.EntityFrameworkCore;
 
-namespace CourseManagement.Areas.Teacher.Pages.Courses
+namespace CourseManagement.Areas.Teacher.Pages.Questions
 {
     public class CreateModel : PageModel
     {
@@ -22,17 +21,11 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
 
         public IActionResult OnGet()
         {
-            List<WebUser> teacherUsers = _context.Users
-      .Where(u => u.Teacher != null)
-      .Include(u=> u.Teacher)
-      .ToList();
-
-            ViewData["InstructorId"] = new SelectList(teacherUsers, "Id", "Id");
             return Page();
         }
 
         [BindProperty]
-        public Course Course { get; set; }
+        public Question Question { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -42,7 +35,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
                 return Page();
             }
 
-            _context.Courses.Add(Course);
+            _context.Questions.Add(Question);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

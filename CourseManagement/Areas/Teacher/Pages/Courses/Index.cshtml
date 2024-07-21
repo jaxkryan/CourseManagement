@@ -38,7 +38,8 @@
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.CourseName)</td>
                 <td>@Html.DisplayFor(modelItem => item.Description)</td>
-                <td>@Html.DisplayFor(modelItem => item.Instructor.Id)</td>
+                <td>@($"{item.Instructor.FirstName} {item.Instructor.LastName}")</td>
+
                 <td>@Html.DisplayFor(modelItem => item.CreatedAt)</td>
                 <td>
                     <img src="@item.Image" alt="Image" style="max-width: 100px; height: auto;" />
