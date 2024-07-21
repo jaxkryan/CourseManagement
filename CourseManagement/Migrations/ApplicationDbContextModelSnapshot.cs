@@ -206,6 +206,10 @@ namespace CourseManagement.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Qid"), 1L, 1);
 
+                    b.Property<string>("Correctans")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Opt1")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -398,36 +402,36 @@ namespace CourseManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e011ed9e-d4d2-434f-b6ed-fbf3426922de",
-                            ConcurrencyStamp = "5993dd42-8b15-4cd5-ad3f-e8564c771d8e",
+                            Id = "de1870b0-dfe4-4aa2-b297-b93f4840c45c",
+                            ConcurrencyStamp = "e2a84f6a-38eb-4acf-ad69-0602038f3512",
                             Name = "guest",
                             NormalizedName = "guest"
                         },
                         new
                         {
-                            Id = "1ad920e8-2a08-4077-b13b-b2f4748356b4",
-                            ConcurrencyStamp = "2456ad83-33ed-4983-83d1-b1174e3aa1ff",
+                            Id = "9dc1673a-d939-418b-b379-ca9ee85850a2",
+                            ConcurrencyStamp = "0bd3c5aa-bce5-400e-b6a1-9269b691f045",
                             Name = "student",
                             NormalizedName = "student"
                         },
                         new
                         {
-                            Id = "2bb87044-83e8-4cc3-b262-dca9d2d2ed50",
-                            ConcurrencyStamp = "e72f1bf6-4141-4867-9ac1-67ed51428432",
+                            Id = "e6fa98ca-ece2-497f-9245-53c61d8a7905",
+                            ConcurrencyStamp = "6efa6d4b-c4bd-4bc9-a222-87f1e4c1b575",
                             Name = "teacher",
                             NormalizedName = "teacher"
                         },
                         new
                         {
-                            Id = "43c59fff-4f09-42b1-961b-dc530ce359e1",
-                            ConcurrencyStamp = "1235ff04-bc5b-4787-a7a1-f5507daf20a6",
+                            Id = "c12c9726-b4be-463d-9f86-b6b7c10ad0b5",
+                            ConcurrencyStamp = "830b72dc-9ba9-4c3f-88ea-bb5590bcdaf8",
                             Name = "parent",
                             NormalizedName = "parent"
                         },
                         new
                         {
-                            Id = "eafe79ac-98c1-4b91-8f56-5844b45ae5fe",
-                            ConcurrencyStamp = "d54548cb-e5be-4187-9617-6a2035f7adaf",
+                            Id = "b0fb367e-a2c0-439b-acfe-860ce73e583e",
+                            ConcurrencyStamp = "86f15d55-5bf3-4c98-a30a-b9c156801ee2",
                             Name = "admin",
                             NormalizedName = "admin"
                         });
