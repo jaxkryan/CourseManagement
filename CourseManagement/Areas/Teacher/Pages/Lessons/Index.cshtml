@@ -1,0 +1,79 @@
+﻿@page
+@model CourseManagement.Areas.Teacher.Pages.Lessons.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Teacher/Pages/Shared/_TeacherLayout.cshtml";
+}
+
+<h1>Index</h1>
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Lesson[0].Course)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lesson[0].LessonTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lesson[0].Content)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lesson[0].CreatedAt)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lesson[0].Link)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Lesson)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Course.CourseId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LessonTitle)
+                </td>
+                <td>
+                    @Html.TextAreaFor(modelItem => item.Content, new { @class = "fixed-size-textarea" })
+                </td>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedAt)
+                </td>
+                <td>
+                    <a href="@item.Link" target="_blank">Click here to view</a>
+                </td>
+
+                <td>
+                    <a asp-page="Edit" asp-route-id="@item.LessonId" class="btn btn-info">Edit</a>
+                    <a asp-page="Details" asp-route-id="@item.LessonId" class="btn btn-secondary">Details</a>
+                    <a asp-page="Delete" asp-route-id="@item.LessonId" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<style>
+    .fixed-size-textarea {
+        width: 300px; /* Fixed width */
+        height: 150px; /* Fixed height */
+        overflow: auto; /* Scrollbars appear when needed */
+        resize: none; /* Disable manual resizing */
+        border: none; /* Remove default border */
+        box-shadow: none; /* Remove any shadow effects */
+        padding: 5px; /* Add some padding for better text alignment */
+        background-color: #f0f0f0; /* Optional: Set a background color to match your design */
+        font-family: inherit; /* Use the same font as the rest of your page */
+        font-size: inherit; /* Match the font size to the surrounding text */
+    }
+</style>

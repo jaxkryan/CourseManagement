@@ -1,7 +1,8 @@
-@using Microsoft.AspNetCore.Identity
+﻿@using Microsoft.AspNetCore.Identity
 @using CourseManagement.Models
 @inject UserManager<WebUser> UserManager
 @inject SignInManager<WebUser> SignInManager
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,7 +89,46 @@
         <!-- Navbar End -->
     </header>
 
-    @RenderBody()
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" asp-area="Teacher" asp-page="/Courses/Index">
+                                <i class="fa fa-book"></i>
+                                Courses
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Teacher" asp-page="/Lessons/Index">
+                                <i class="fa fa-chalkboard-teacher"></i>
+                                Lessons
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Teacher" asp-page="/Questions/Index">
+                                <i class="fa fa-chalkboard-teacher"></i>
+                                Questions
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="Teacher" asp-page="/Assignments/Index">
+                                <i class="fa fa-tasks"></i>
+                                Assignments
+                            </a>
+                        </li>
+                        
+                    </ul>
+                </div>
+            </nav>
+
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
 
     <!-- Footer Start -->
     <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">

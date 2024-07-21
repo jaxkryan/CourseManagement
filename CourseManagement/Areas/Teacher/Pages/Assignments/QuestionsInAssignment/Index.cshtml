@@ -1,0 +1,40 @@
+﻿@page
+@model CourseManagement.Areas.Teacher.Pages.Assignments.QuestionsInAssignment.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Areas/Teacher/Pages/Shared/_TeacherLayout.cshtml";
+}
+
+<h1>Questions for Assignment @Model.AssignmentId</h1>
+
+<p>
+    <a asp-page="Create" asp-route-assignmentId="@Model.AssignmentId">Add New Question</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Question</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AssignmentQuestions)
+        {
+            <tr>
+                <td>@item.Question.Qid</td>
+                <td>
+                    <a asp-page="./Edit" asp-route-assignmentId="@item.AssignmentId" asp-route-questionId="@item.QuestionId">Edit</a> |
+                    <a asp-page="./Delete" asp-route-assignmentId="@item.AssignmentId" asp-route-questionId="@item.QuestionId">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
