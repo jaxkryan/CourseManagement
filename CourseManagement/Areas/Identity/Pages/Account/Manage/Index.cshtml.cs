@@ -3,12 +3,16 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using CourseManagement.Models;
+using System.IO;
+using System.Threading.Tasks;
+
 namespace CourseManagement.Areas.Identity.Pages.Account.Manage
 {
     public class IndexModel : PageModel
     {
         private readonly UserManager<WebUser> _userManager;
         private readonly SignInManager<WebUser> _signInManager;
+
         public IndexModel(
                 UserManager<WebUser> userManager,
                 SignInManager<WebUser> signInManager)
@@ -16,6 +20,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
             _userManager = userManager;
             _signInManager = signInManager;
         }
+
         public string Username { get; set; }
 
         [BindProperty]
@@ -23,8 +28,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
-            public string PhoneNumber { get; set; }
-            public string FullName { get; set; }
             public string Address { get; set; }
             public DateTime Birthday { get; set; }
 
@@ -36,13 +39,15 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
 
             // Property for image upload
             [Display(Name = "Profile Picture")]
-            public IFormFile ImageFile { get; set; }
+            public IFormFile? ImageFile { get; set; }
         }
+
         private async Task LoadAsync(WebUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
             Username = userName;
+
             Input = new InputModel
             {
                 Birthday = user.Dob,
@@ -80,21 +85,34 @@ namespace CourseManagement.Areas.Identity.Pages.Account.Manage
                 await LoadAsync(user);
                 return Page();
             }
-            // Process the uploaded image file
+
+            //Process the uploaded image file
             if (Input.ImageFile != null)
             {
-                var filePath = Path.Combine("wwwroot/images/profile", Input.ImageFile.FileName);
+                var uploads = Path.Combine("wwwroot/img/profile");
+                if (!Directory.Exists(uploads))
+                {
+                    Directory.CreateDirectory(uploads);
+                }
+
+                var filePath = Path.Combine(uploads, Input.ImageFile.FileName);
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await Input.ImageFile.CopyToAsync(stream);
                 }
-                Input.Image = $"/images/profile/{Input.ImageFile.FileName}";
+                Input.Image = $"/img/profile/{Input.ImageFile.FileName}";
             }
 
             user.Address = Input.Address;
             user.Dob = Input.Birthday;
             user.FirstName = Input.FirstName;
             user.LastName = Input.LastName;
+            Console.WriteLine("-------------------------------------" + Input.Birthday);
+            if (Input.Image != null)
+            {
+                user.Image = Input.Image;
+            }
+
             await _userManager.UpdateAsync(user);
 
             return RedirectToPage();
