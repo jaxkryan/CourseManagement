@@ -131,7 +131,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
         {
             returnUrl = returnUrl ?? Url.Content("~/");
             // Đã đăng nhập nên chuyển hướng về Index
-            if (_signInManager.IsSignedIn(User)) return Redirect("Index");
+            if (_signInManager.IsSignedIn(User)) return Redirect("~/");
             //d hieu sao bo cai nay di thi sai?
             foreach (var e in ModelState)
             {
