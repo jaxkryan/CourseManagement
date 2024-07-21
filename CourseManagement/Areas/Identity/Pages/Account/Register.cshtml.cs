@@ -73,6 +73,12 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+
+            public string? Image { get; set; }
+
+            // Property for image upload
+            [Display(Name = "Profile Picture")]
+            public IFormFile? ImageFile { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = "/~")
@@ -86,6 +92,22 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             //System.Diagnostics.Debug.WriteLine("---------Nothing here---------");
+            if (Input.ImageFile != null)
+            {
+                var uploads = Path.Combine("wwwroot/img/profile");
+                if (!Directory.Exists(uploads))
+                {
+                    Directory.CreateDirectory(uploads);
+                }
+
+                var filePath = Path.Combine(uploads, Input.ImageFile.FileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await Input.ImageFile.CopyToAsync(stream);
+                }
+                Input.Image = $"/img/profile/{Input.ImageFile.FileName}";
+            }
+
             if (ModelState.IsValid)
             {
                 //System.Diagnostics.Debug.WriteLine("---------Niceeeeeee---------");
@@ -97,7 +119,8 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
                     Dob = Input.Dob,
-                    CreatedAt = DateTime.Now
+                    CreatedAt = DateTime.Now,
+                    Image = Input.Image
                 };
                 //System.Diagnostics.Debug.WriteLine("---------" + Input.FirstName + "---------");
                 var result = await _userManager.CreateAsync(user, Input.Password);

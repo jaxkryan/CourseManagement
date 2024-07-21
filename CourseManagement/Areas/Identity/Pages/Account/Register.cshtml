@@ -78,7 +78,11 @@
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                 </div>
             </div>
-
+            <div class="form-group">
+                <label asp-for="Input.ImageFile">Image File</label>
+                <input asp-for="Input.ImageFile" type="file" class="form-control-file" />
+                <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
+            </div>
             <div class="row mb-3">
                 <div class="offset-sm-4 col-sm-4 d-grid">
                     <button type="submit" class="btn btn-primary">Register</button>
@@ -89,4 +93,29 @@
             </div>
         </form>
     </div>
+    <div class="col-md-6 col-md-offset-2">
+        @if ((Model.ExternalLogins?.Count ?? 0) != 0)
+        {
+            <section>
+                <h4>Sử dụng dịch vụ</h4>
+                <hr />
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                    <div>
+                        <p>
+                            @foreach (var provider in Model.ExternalLogins)
+                            {
+                                <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                            }
+                        </p>
+                    </div>
+                </form>
+            </section>
+        }
+    </div>
 </div>
+
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,16 +34,23 @@ var mailsettings = builder.Configuration.GetSection("MailSettings");
 services.AddTransient<ISendMailService, SendMailService>();
 services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
-//services.AddAuthentication()
-//    .AddGoogle(googleOptions =>
-//    {
-//        IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
+services.AddAuthentication()
+    .AddGoogle(googleOptions =>
+    {
+        IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
 
-//        googleOptions.ClientId = googleAuthNSection["ClientId"];
-//        googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
-//        googleOptions.CallbackPath = "/google-login";
+        googleOptions.ClientId = googleAuthNSection["ClientId"];
+        googleOptions.ClientSecret = googleAuthNSection["ClientSecret"];
+        googleOptions.CallbackPath = "/google-login";
+        googleOptions.Events.OnRemoteFailure = context =>
+        {
+            context.HandleResponse();
+            var redirectUrl = "Identity/Account/Login";
+            context.Response.Redirect(redirectUrl);
+            return Task.CompletedTask;
+        };
 
-//    });
+    });
 services.Configure<IdentityOptions>(options => {
     // Thiết lập về Password
     options.Password.RequireDigit = false; // Không bắt phải có số
@@ -54,7 +62,7 @@ services.Configure<IdentityOptions>(options => {
 
     // Cấu hình Lockout - khóa user
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); // Khóa 5 phút
-    options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lầ thì khóa
+    options.Lockout.MaxFailedAccessAttempts = 5; // Thất bại 5 lần thì khóa
     options.Lockout.AllowedForNewUsers = true;
 
     // Cấu hình về User.
