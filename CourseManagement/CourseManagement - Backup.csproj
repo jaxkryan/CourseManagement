@@ -111,15 +111,7 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="8.0.0" />
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.17" />
-		<PackageReference Include="MimeKit" Version="4.7.1" />
 		<PackageReference Include="NSwag.AspNetCore" Version="13.3.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Content Update="Areas\Guest\Pages\Index.cshtml">
-	    <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-	    <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-	  </Content>
 	</ItemGroup>
 	
 </Project>

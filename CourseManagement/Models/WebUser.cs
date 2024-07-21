@@ -63,6 +63,7 @@ public class WebUser : IdentityUser
         public string Content { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public string? Link { get; set; }
+        public string Level { get; set; }
     }
     public class Assignment
     {
@@ -78,8 +79,16 @@ public class WebUser : IdentityUser
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public virtual ICollection<Submission> Submissions { get; set; }
+        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
     }
+    public class AssignmentQuestion
+    {
+        public int AssignmentId { get; set; }
+        public Assignment Assignment { get; set; }
 
+        public int QuestionId { get; set; }
+        public Question Question { get; set; }
+    }
     public class Submission
     {
         public int SubmissionId { get; set; }
@@ -126,5 +135,18 @@ public class WebUser : IdentityUser
         [ForeignKey("Student")]
         public string StudentId { get; set; }
         public WebUser Student { get; set; }
+    }
+
+    public class Question
+    {
+        [Key]
+        public int Qid { get; set; }
+        public string QContent { get; set; }
+        public string Opt1 { get; set; }
+        public string Opt2 { get; set; }
+        public string Opt3 { get; set; }
+        public string Opt4 { get; set; }
+
+        public virtual ICollection<AssignmentQuestion> AssignmentQuestions { get; set; } // New navigation property
     }
 }

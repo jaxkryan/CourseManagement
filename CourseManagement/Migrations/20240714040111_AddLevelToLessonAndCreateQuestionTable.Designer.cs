@@ -4,6 +4,7 @@ using CourseManagement.Pages.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,13 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240714040111_AddLevelToLessonAndCreateQuestionTable")]
+    partial class AddLevelToLessonAndCreateQuestionTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.32")
+                .HasAnnotation("ProductVersion", "6.0.31")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -69,21 +71,6 @@ namespace CourseManagement.Migrations
                     b.HasIndex("CourseId");
 
                     b.ToTable("Assignments");
-                });
-
-            modelBuilder.Entity("CourseManagement.Models.AssignmentQuestion", b =>
-                {
-                    b.Property<int>("AssignmentId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AssignmentId", "QuestionId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("AssignmentQuestion");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.Course", b =>
@@ -398,36 +385,36 @@ namespace CourseManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "e011ed9e-d4d2-434f-b6ed-fbf3426922de",
-                            ConcurrencyStamp = "5993dd42-8b15-4cd5-ad3f-e8564c771d8e",
+                            Id = "e61d8999-2a70-46ef-a277-43a2fc73cb61",
+                            ConcurrencyStamp = "9e281bb6-c4ff-4091-8868-b67a1814054f",
                             Name = "guest",
                             NormalizedName = "guest"
                         },
                         new
                         {
-                            Id = "1ad920e8-2a08-4077-b13b-b2f4748356b4",
-                            ConcurrencyStamp = "2456ad83-33ed-4983-83d1-b1174e3aa1ff",
+                            Id = "5838f4e8-f6a5-4fc2-a9a5-cf0df5b9471b",
+                            ConcurrencyStamp = "70bcb92f-197d-4ed3-a57c-0efaa9f2e3bc",
                             Name = "student",
                             NormalizedName = "student"
                         },
                         new
                         {
-                            Id = "2bb87044-83e8-4cc3-b262-dca9d2d2ed50",
-                            ConcurrencyStamp = "e72f1bf6-4141-4867-9ac1-67ed51428432",
+                            Id = "3bb72063-0dd1-421c-8097-babea362195c",
+                            ConcurrencyStamp = "550d5fbe-28ea-4cfc-84df-e2cfc1fab452",
                             Name = "teacher",
                             NormalizedName = "teacher"
                         },
                         new
                         {
-                            Id = "43c59fff-4f09-42b1-961b-dc530ce359e1",
-                            ConcurrencyStamp = "1235ff04-bc5b-4787-a7a1-f5507daf20a6",
+                            Id = "3337306b-74bb-4009-8783-4b81d05aa7ce",
+                            ConcurrencyStamp = "2d165a22-cd63-4ccf-a1f6-b50e92616c82",
                             Name = "parent",
                             NormalizedName = "parent"
                         },
                         new
                         {
-                            Id = "eafe79ac-98c1-4b91-8f56-5844b45ae5fe",
-                            ConcurrencyStamp = "d54548cb-e5be-4187-9617-6a2035f7adaf",
+                            Id = "a039520d-594a-46d1-bddb-c8d1c43b1afa",
+                            ConcurrencyStamp = "9513df2e-5942-43d3-8dd3-af830358a81c",
                             Name = "admin",
                             NormalizedName = "admin"
                         });
@@ -563,25 +550,6 @@ namespace CourseManagement.Migrations
                         .IsRequired();
 
                     b.Navigation("Course");
-                });
-
-            modelBuilder.Entity("CourseManagement.Models.AssignmentQuestion", b =>
-                {
-                    b.HasOne("CourseManagement.Models.Assignment", "Assignment")
-                        .WithMany("AssignmentQuestions")
-                        .HasForeignKey("AssignmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CourseManagement.Models.Question", "Question")
-                        .WithMany("AssignmentQuestions")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Assignment");
-
-                    b.Navigation("Question");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.Course", b =>
@@ -727,8 +695,6 @@ namespace CourseManagement.Migrations
 
             modelBuilder.Entity("CourseManagement.Models.Assignment", b =>
                 {
-                    b.Navigation("AssignmentQuestions");
-
                     b.Navigation("Submissions");
                 });
 
@@ -739,11 +705,6 @@ namespace CourseManagement.Migrations
                     b.Navigation("Enrollments");
 
                     b.Navigation("Lessons");
-                });
-
-            modelBuilder.Entity("CourseManagement.Models.Question", b =>
-                {
-                    b.Navigation("AssignmentQuestions");
                 });
 
             modelBuilder.Entity("CourseManagement.Models.WebUser", b =>
