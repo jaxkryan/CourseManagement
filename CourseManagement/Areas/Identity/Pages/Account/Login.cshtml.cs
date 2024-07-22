@@ -95,7 +95,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                         Input.RememberMe,
                         lockoutOnFailure: true
                     );
-
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");

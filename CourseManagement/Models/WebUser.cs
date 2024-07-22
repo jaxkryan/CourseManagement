@@ -13,7 +13,8 @@ public class WebUser : IdentityUser
     public DateTime Dob { get; set; }
     public string Address { get; set; } = "";
     public DateTime CreatedAt { get; set; }
-    public string? Image { get; set; } 
+    public string? Image { get; set; }
+    public bool IsActive { get; set; } = true; 
     public virtual ICollection<Enrollment> Enrollments { get; set; }
     public virtual Teacher Teacher { get; set; }
     public virtual Admin Admin { get; set; }
