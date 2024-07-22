@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System.Reflection.Emit;
 
 namespace CourseManagement.Pages.Service
 {
@@ -10,7 +9,6 @@ namespace CourseManagement.Pages.Service
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-
         }
 
         public DbSet<Enrollment> Enrollments { get; set; }
@@ -22,6 +20,7 @@ namespace CourseManagement.Pages.Service
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Parent> Parents { get; set; }
         public DbSet<Question> Questions { get; set; }
+        public DbSet<StudentResponse> StudentResponses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -43,6 +42,7 @@ namespace CourseManagement.Pages.Service
             admin.NormalizedName = "admin";
 
             builder.Entity<IdentityRole>().HasData(guest, student, teacher, parent, admin);
+
             builder.Entity<Enrollment>()
                .HasOne(e => e.User)
                .WithMany(u => u.Enrollments)
@@ -98,7 +98,7 @@ namespace CourseManagement.Pages.Service
                 .HasForeignKey(p => p.StudentId);
 
             builder.Entity<AssignmentQuestion>()
-            .HasKey(aq => new { aq.AssignmentId, aq.QuestionId });
+                .HasKey(aq => new { aq.AssignmentId, aq.QuestionId });
 
             builder.Entity<AssignmentQuestion>()
                 .HasOne(aq => aq.Assignment)
@@ -109,8 +109,18 @@ namespace CourseManagement.Pages.Service
                 .HasOne(aq => aq.Question)
                 .WithMany(q => q.AssignmentQuestions)
                 .HasForeignKey(aq => aq.QuestionId);
+
+            builder.Entity<StudentResponse>()
+                .HasOne(sr => sr.Submission)
+                .WithMany(s => s.StudentResponses)
+                .HasForeignKey(sr => sr.SubmissionId);
+
+            builder.Entity<StudentResponse>()
+                .HasOne(sr => sr.Question)
+                .WithMany()
+                .HasForeignKey(sr => sr.QuestionId);
         }
 
         public DbSet<CourseManagement.Models.AssignmentQuestion>? AssignmentQuestion { get; set; }
     }
- }
+}
