@@ -66,6 +66,14 @@
                     </div>
                     <a href="contact.html" class="nav-item nav-link">Contact</a>
                 </div>
+                @if (User.IsInRole("admin"))
+                {
+                    <a asp-page="/Admin/Index" class="nav-item nav-link">d</a>
+                }
+                @if (User.IsInRole("teacher"))
+                {
+                    <a asp-page="/Teacher/Index" class="nav-item nav-link"></a>
+                }
                 @if (SignInManager.IsSignedIn(User))
                 {
                     var user = await UserManager.GetUserAsync(User);
