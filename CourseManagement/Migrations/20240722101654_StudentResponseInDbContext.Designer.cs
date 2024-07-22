@@ -4,6 +4,7 @@ using CourseManagement.Pages.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CourseManagement.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240722101654_StudentResponseInDbContext")]
+    partial class StudentResponseInDbContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -353,9 +355,6 @@ namespace CourseManagement.Migrations
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -435,36 +434,36 @@ namespace CourseManagement.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "3618e445-203d-4562-b825-c5e34a8040d1",
-                            ConcurrencyStamp = "ff6ed919-a20c-4149-b7f0-17097726a821",
+                            Id = "c90c8768-ef80-4b70-b287-e043043dd9c7",
+                            ConcurrencyStamp = "5bf7a23c-14a5-421f-97a6-bec43498c498",
                             Name = "guest",
                             NormalizedName = "guest"
                         },
                         new
                         {
-                            Id = "7cdd3590-20ee-48e0-bd94-251d19c4d54d",
-                            ConcurrencyStamp = "4bdf9891-2a00-48c7-ac99-26b55a34d17c",
+                            Id = "5e65695f-9a65-4a55-a6b0-b56ad4b9cf93",
+                            ConcurrencyStamp = "02d09250-661e-4a57-9c7a-e6eab0866bef",
                             Name = "student",
                             NormalizedName = "student"
                         },
                         new
                         {
-                            Id = "211b5023-2c61-4033-b0de-d6db76062f90",
-                            ConcurrencyStamp = "63108085-702d-48eb-a86d-2102706d526f",
+                            Id = "60c17938-f9e9-40f0-b936-61f56d9bbae0",
+                            ConcurrencyStamp = "a26f4c10-094d-4dd9-bdf3-edac23a5695a",
                             Name = "teacher",
                             NormalizedName = "teacher"
                         },
                         new
                         {
-                            Id = "fc0f64a0-edf7-4297-8fa2-9773b32e433c",
-                            ConcurrencyStamp = "3f6171f2-d029-4b23-8bc8-3444935e6df7",
+                            Id = "58703d04-a955-4880-8bd4-f6a0a8e999d7",
+                            ConcurrencyStamp = "c25c20b2-580c-462d-8beb-1c5be10ec7b2",
                             Name = "parent",
                             NormalizedName = "parent"
                         },
                         new
                         {
-                            Id = "a4aa4f2f-b749-4e12-80c1-e978b48936bd",
-                            ConcurrencyStamp = "54df94a2-615c-44c1-8050-51b32bf3eef3",
+                            Id = "1970b9c0-942c-4aa5-b19e-4d69d02541b3",
+                            ConcurrencyStamp = "da897c07-37f9-4372-bce9-33d4bdd91bd7",
                             Name = "admin",
                             NormalizedName = "admin"
                         });
