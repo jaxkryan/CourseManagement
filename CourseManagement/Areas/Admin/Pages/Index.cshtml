@@ -56,6 +56,23 @@
                                             </button>
                                         }
                                     }
+
+                                    else
+                                    {
+                                        @if (user.IsActive)
+                                        {
+                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDisable('@user.Id')">
+                                                <i class="fas fa-trash-alt me-1"></i>Disable
+                                            </button>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-sm btn-outline-success" onclick="confirmActivate('@user.Id')">
+                                                <i class="fas fa-check me-1"></i>Reactivate
+                                            </button>
+                                        }
+                                    }
+
                                 </td>
                             </tr>
                         }
@@ -69,13 +86,15 @@
 @section Scripts {
     <script>
         function confirmDisable(userId) {
-            if (confirm('Are you sure you want to disable this teacher?')) {
+            if (confirm('Are you sure you want to disable this user?')) {
+
                 window.location.href = '/Admin/Index?handler=Disable&userId=' + userId;
             }
         }
 
         function confirmActivate(userId) {
-            if (confirm('Are you sure you want to reactivate this teacher?')) {
+            if (confirm('Are you sure you want to reactivate this user?')) {
+
                 window.location.href = '/Admin/Index?handler=Activate&userId=' + userId;
             }
         }

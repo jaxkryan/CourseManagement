@@ -31,7 +31,7 @@ namespace CourseManagement.Areas
                 }
                 if (roles.Contains("student") && context.Request.Path.Equals("/index", StringComparison.OrdinalIgnoreCase))
                 {
-                    context.Response.Redirect("/student/index");
+                    context.Response.Redirect("/index");
                     return;
                 }
             }

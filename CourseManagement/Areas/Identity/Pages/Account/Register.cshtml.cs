@@ -54,13 +54,10 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             public string Email { get; set; }
 
             [Required]
-            public string PhoneNumber { get; set; }
-
-
-            [Required]
             public string Address { get; set; }
 
             [Required]
+            [RegularExpression(@"^(19[0-9]{2}|200[0-9]|201[0-8])-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$", ErrorMessage = "Date of Birth must be between 1900 and 2018.")]
             public DateTime Dob { get; set; }
 
             [Required]
@@ -116,7 +113,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     UserName = Input.Email,
                     Email = Input.Email,
-                    PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
                     Dob = Input.Dob,
                     CreatedAt = DateTime.Now,
