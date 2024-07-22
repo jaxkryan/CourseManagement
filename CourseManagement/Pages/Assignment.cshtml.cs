@@ -1,6 +1,6 @@
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
-
+using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,16 +30,15 @@ namespace CourseManagement.Pages
         public async Task<IActionResult> OnGetAsync(int assignmentId)
         {
             AssignId = assignmentId;
-            Console.WriteLine($"-------------------------- AssignId: {AssignId}");
+            
             AssignmentQuestions = await _context.AssignmentQuestion
                 .Where(aq => aq.AssignmentId == AssignId)
                 .Include(aq => aq.Question)
                 .ToListAsync();
-
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(Dictionary<int, string> selectedAnswers, int assignmentId)
+        public async Task<IActionResult> OnPostAsync(Dictionary<int, string?> selectedAnswers, int assignmentId)
         {
             try
             {
@@ -48,9 +47,7 @@ namespace CourseManagement.Pages
                     // Handle validation errors if any
                     return Page();
                 }
-
-                float correct = 0;
-                float incorrect = 0;
+                
                 var currentUser = await _userManager.GetUserAsync(User);
                 List<StudentResponse> studentResponses = new List<StudentResponse>();
                 Submission submission = new Submission
@@ -60,27 +57,21 @@ namespace CourseManagement.Pages
                     SubmittedAt = DateTime.Now,
                 };
 
-                // Log or debug to verify Submission details
-                Console.WriteLine($"----------------------Submission details: AssignmentId = {submission.AssignmentId}, UserId = {submission.UserId}");
-
                 // Save submission to get SubmissionId
                 await _context.Submissions.AddAsync(submission);
                 await _context.SaveChangesAsync(); // Save submission to get SubmissionId
 
+                float correct = 0;
+
                 foreach (var (questionId, selectedOption) in selectedAnswers)
                 {
                     var question = await _context.Questions.FindAsync(questionId);
-
-                    if (question != null)
+                    if (question != null && selectedOption != null)
                     {
                         bool isCorrect = (question.Correctans.Equals(selectedOption));
                         if (isCorrect)
                         {
                             correct++;
-                        }
-                        else
-                        {
-                            incorrect++;
                         }
                         StudentResponse response = new StudentResponse
                         {
@@ -93,7 +84,10 @@ namespace CourseManagement.Pages
                     }
                 }
 
-                submission.Grade = correct / (correct + incorrect);
+                // Calculate grade
+                float total = _context.AssignmentQuestion.Count(q => q.AssignmentId == assignmentId);
+                submission.Grade = (correct / total) * 100;
+                Console.WriteLine($"-------------------------- correct: {correct}, total: {total}");
 
                 // Save all student responses
                 await _context.StudentResponses.AddRangeAsync(studentResponses);
