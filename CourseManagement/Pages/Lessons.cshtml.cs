@@ -17,13 +17,9 @@ namespace CourseManagement.Pages
         private readonly UserManager<WebUser> _userManager;
         private readonly ApplicationDbContext _context;
         public List<Lesson> listLessons { get; private set; }
-       //public int CurrentPage { get; set; }
-        //public int TotalPages { get; private set; }
         public bool ShowNoLessonsFound { get; private set; }
-
         public WebUser CurrentUser { get; private set; }
         public int CID { get; set; } // Added property to receive courseid
-
         [BindProperty(SupportsGet = true)]
         public string SearchText { get; set; }
 
@@ -34,18 +30,10 @@ namespace CourseManagement.Pages
             SearchText = "";
         }
 
-        public async Task<IActionResult> OnGetAsync(int courseid/*, int? page*/)
+        public async Task<IActionResult> OnGetAsync(int courseid)
         {
             CID = courseid;
             ViewData["Cname"] = _context.Courses.Where(c => c.CourseId == courseid).Select(c => c.CourseName).FirstOrDefault();
-            //CurrentPage = page ?? 1;
-            await LoadLessonsAsync();
-            return Page();
-        }
-
-        public async Task<IActionResult> OnPostSearchAsync()
-        {
-            //CurrentPage = 1; // Reset to first page when searching
             await LoadLessonsAsync();
             return Page();
         }
@@ -55,27 +43,6 @@ namespace CourseManagement.Pages
             IQueryable<Lesson> lessonsQuery = _context.Lessons
                 .Where(l => l.CourseId == CID);
 
-            if (!string.IsNullOrEmpty(SearchText))
-            {
-                lessonsQuery = lessonsQuery.Where(l => l.LessonTitle.Contains(SearchText));
-            }
-
-            //int pageSize = 6; // Set your desired page size
-
-            //TotalPages = (int)System.Math.Ceiling((double)await lessonsQuery.CountAsync() / pageSize);
-
-            //if (CurrentPage < 1)
-            //{
-            //    CurrentPage = 1;
-            //}
-            //else if (CurrentPage > TotalPages)
-            //{
-            //    CurrentPage = TotalPages;
-            //}
-
-            //listLessons = await lessonsQuery.Skip((CurrentPage - 1) * pageSize)
-            //                               .Take(pageSize)
-            //                               .ToListAsync();
             listLessons = await lessonsQuery.ToListAsync();
 
             ShowNoLessonsFound = listLessons.Count == 0;

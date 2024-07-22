@@ -4,6 +4,24 @@
 @{
 
 }
+<style>
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* Tỷ lệ mặc định 16:9 (height/width) */
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
+
 <!DOCTYPE html>
 <html lang="en">
 <body>
@@ -23,13 +41,7 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Lessons</h6>
-                <h1 class="mb-5">Search lesson by name:</h1>
-                <form method="post" asp-page-handler="Search" id="lesson-search-form">
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="Enter lesson name...." name="SearchText" value="@Model.SearchText">
-                        <button class="btn btn-primary" type="submit">Search</button>
-                    </div>
-                </form>
+                <h1 class="mb-5">Watch videos below then do the quiz:</h1>
             </div>
             @if (@Model.listLessons != null && @Model.listLessons.Any())
             {
@@ -39,10 +51,8 @@
                         <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
                             <div class="course-item bg-light">
                                 <div class="position-relative overflow-hidden">
-                                    <img class="img-fluid" src="img/course-1.jpg" alt="">
-                                    <div class="w-100 d-flex justify-content-center position-absolute bottom-0 start-0 mb-4">
-                                        <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3 border-end" style="border-radius: 30px 0 0 30px;">Read More</a>
-                                        <a href="#" class="flex-shrink-0 btn btn-sm btn-primary px-3" style="border-radius: 0 30px 30px 0;">Join Now</a>
+                                    <div class="video-container">
+                                        @Html.Raw(course.Link)
                                     </div>
                                 </div>
                                 <div class="text-center p-4 pb-0">
