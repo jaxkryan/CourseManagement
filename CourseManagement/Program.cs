@@ -9,11 +9,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using CourseManagement.Areas;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+    .AddMvcOptions(options =>
+    {
+        options.Filters.Add(typeof(RedirectFilter));
+    });
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
