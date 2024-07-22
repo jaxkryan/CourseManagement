@@ -79,7 +79,7 @@ namespace CourseManagement.Areas.Admin.Pages
 
             var roles = await _userManager.GetRolesAsync(user);
 
-            if (!roles.Contains("admin"))
+            if (roles.Contains("admin"))
             {
                 return BadRequest("Admin can't be disabled.");
             }

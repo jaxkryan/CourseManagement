@@ -2,12 +2,13 @@
 @model LessonsModel
 @using CourseManagement.Models
 @{
-
+    ViewData["Title"] = "Course: " + ViewData["Cname"];
 }
+
 <style>
     .video-container {
         position: relative;
-        padding-bottom: 56.25%; /* Tỷ lệ mặc định 16:9 (height/width) */
+        padding-bottom: 56.25%;
         height: 0;
         overflow: hidden;
         max-width: 100%;
@@ -20,76 +21,146 @@
             width: 100%;
             height: 100%;
         }
+
+    .sidebar {
+        height: 100%;
+        width: 250px;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #f8f9fa;
+        overflow-x: hidden;
+        padding-top: 20px;
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 0px 10px;
+    }
+
+    .sidebar-item {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 18px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+    }
+
+        .sidebar-item:hover {
+            color: #f1f1f1;
+            background-color: #818181;
+        }
+
+    .active {
+        background-color: #4CAF50;
+        color: white;
+    }
 </style>
 
-<!DOCTYPE html>
-<html lang="en">
-<body>
-    <!-- Header Start -->
-    <div class="container-fluid bg-primary py-3 mb-3 page-header">
-        <div class="container py-3">
+<div class="sidebar">
+    <h3 class="px-3">Lessons</h3>
+    @foreach (var lesson in Model.listLessons)
+    {
+        <a href="#" class="sidebar-item lesson-link" data-lesson-id="@lesson.LessonId" data-lesson-title="@lesson.LessonTitle" data-lesson-link="@lesson.Link">@lesson.LessonTitle</a>
+    }
+    <h3 class="px-3 mt-4">Assignments</h3>
+    @foreach (var assignment in Model.listAssignments.Select((a, index) => new { Assignment = a, Index = index + 1 }))
+    {
+        <a href="#" class="btn btn-primary mt-2 assignment-link" data-assignment-id="@assignment.Assignment.AssignmentId">Do Assignment @assignment.Index</a>
+    }
+</div>
+
+<div class="main-content">
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
             <div class="row justify-content-center">
                 <div class="col-lg-10 text-center">
-                    <h1 class="display-4 text-white animated slideInDown">Course: @ViewData["Cname"]</h1>
+                    <h1 class="display-3 text-white animated slideInDown">Course: @ViewData["Cname"]</h1>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Header End -->
-    <!-- Categories Start -->
     <div class="container-xxl py-5 category">
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h6 class="section-title bg-white text-center text-primary px-3">Lessons</h6>
                 <h1 class="mb-5">Watch videos below then do the quiz:</h1>
             </div>
-            @if (@Model.listLessons != null && @Model.listLessons.Any())
-            {
-                <div id="course-list" class="row g-4 justify-content-center">
-                    @foreach (var course in @Model.listLessons)
-                    {
-                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
-                            <div class="course-item bg-light">
-                                <div class="position-relative overflow-hidden">
-                                    <div class="video-container">
-                                        @Html.Raw(course.Link)
-                                    </div>
-                                </div>
-                                <div class="text-center p-4 pb-0">
-                                    <h3 class="mb-0">$149.00</h3>
-                                    <div class="mb-3">
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small class="fa fa-star text-primary"></small>
-                                        <small>(123)</small>
-                                    </div>
-                                    <h5 class="mb-4">@course.LessonTitle</h5>
-                                </div>
-                                <div class="d-flex border-top">
-                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>John Doe</small>
-                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>1.49 Hrs</small>
-                                    <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
-                                </div>
-                            </div>
-                            
-                        </div>
-                    }
-                    @foreach (var assignment in Model.listAssignments.Select((a, index) => new { Assignment = a, Index = index + 1 }))
-                    {
-                        <a href="/Assignment?assignmentId=@assignment.Assignment.AssignmentId" class="btn btn-primary mt-2">Do Assignment @assignment.Index</a>
-                    }
-                </div>
-
-            }
-            else
-            {
-                <p>No lesson found.</p>
-            }
+            <div id="lesson-content" class="row g-4 justify-content-center">
+                <!-- Lesson content or assignment content will be dynamically loaded here -->
+            </div>
         </div>
     </div>
-</body>
-</html>
+</div>
 
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('.lesson-link').click(function (e) {
+                e.preventDefault();
+                var lessonId = $(this).data('lesson-id');
+                var lessonTitle = $(this).data('lesson-title');
+                var lessonLink = $(this).data('lesson-link');
+
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+
+                loadLessonContent(lessonTitle, lessonLink);
+            });
+
+            $('.assignment-link').click(function (e) {
+                e.preventDefault();
+                var assignmentId = $(this).data('assignment-id');
+
+                $('.sidebar-item').removeClass('active');
+                $(this).addClass('active');
+
+                loadAssignmentContent(assignmentId);
+            });
+
+            function loadLessonContent(lessonTitle, lessonLink) {
+                var content = `
+                                    <div class="col-lg-8 col-md-10 wow fadeInUp" data-wow-delay="0.1s">
+                                        <div class="course-item bg-light">
+                                            <div class="position-relative overflow-hidden">
+                                                <div class="video-container">
+                                                    ${lessonLink}
+                                                </div>
+                                            </div>
+                                            <div class="text-center p-4 pb-0">
+                                                <h5 class="mb-4">${lessonTitle}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                $('#lesson-content').html(content);
+            }
+
+            function loadAssignmentContent(assignmentId) {
+                var content = `
+                                    <div class="col-lg-8 col-md-10 wow fadeInUp" data-wow-delay="0.1s">
+                                        <div class="course-item bg-light">
+                                            <div class="position-relative overflow-hidden">
+                                                <div class="p-4">
+                                                    <h5>Assignment ${assignmentId}</h5>
+                                                    <a href="/Assignment?assignmentId=${assignmentId}" class="btn btn-primary">Click to view assignment</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                `;
+                $('#lesson-content').html(content);
+            }
+
+            // Load the first lesson by default
+            if ($('.lesson-link').length > 0) {
+                var firstLesson = $('.lesson-link:first');
+                firstLesson.addClass('active');
+                loadLessonContent(firstLesson.data('lesson-title'), firstLesson.data('lesson-link'));
+            }
+        });
+    </script>
+}

@@ -9,6 +9,7 @@ using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.RegularExpressions;
 
 namespace CourseManagement.Areas.Teacher.Pages.Lessons
 {
@@ -68,6 +69,13 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
             {
                 PaginatedLessons = new PaginatedList<Lesson>(new List<Lesson>(), 1, 0, 0);
             }
+        }
+
+        // Helper method to extract video URL from iframe HTML
+        public string ExtractVideoUrlFromIframe(string iframeHtml)
+        {
+            var match = Regex.Match(iframeHtml, @"src=""(.*?)""");
+            return match.Success ? match.Groups[1].Value : string.Empty;
         }
     }
 }

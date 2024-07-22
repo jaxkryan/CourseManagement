@@ -16,11 +16,13 @@ namespace CourseManagement.Pages
     {
         private readonly UserManager<WebUser> _userManager;
         private readonly ApplicationDbContext _context;
+
         public List<Lesson> listLessons { get; private set; }
         public List<Assignment> listAssignments { get; private set; }
         public bool ShowNoLessonsFound { get; private set; }
         public WebUser CurrentUser { get; private set; }
-        public int CID { get; set; } // Added property to receive courseid
+        public int CID { get; set; }
+
         [BindProperty(SupportsGet = true)]
         public string SearchText { get; set; }
 
@@ -34,13 +36,18 @@ namespace CourseManagement.Pages
         public async Task<IActionResult> OnGetAsync(int courseid)
         {
             CID = courseid;
-            ViewData["Cname"] = _context.Courses.Where(c => c.CourseId == courseid).Select(c => c.CourseName).FirstOrDefault();
+            var course = await _context.Courses.FindAsync(courseid);
+            if (course == null)
+            {
+                return NotFound();
+            }
+            ViewData["Cname"] = course.CourseName;
             await LoadLessonsAsync();
             var currentUser = await _userManager.GetUserAsync(User);
             Enrollment enrollment = new Enrollment
             {
                 CourseId = courseid,
-                UserId  = currentUser.Id,
+                UserId = currentUser.Id,
                 EnrolledAt = DateTime.Now,
             };
             _context.Enrollments.Add(enrollment);
@@ -50,15 +57,17 @@ namespace CourseManagement.Pages
 
         private async Task LoadLessonsAsync()
         {
-            IQueryable<Lesson> lessonsQuery = _context.Lessons
-                .Where(l => l.CourseId == CID);
-            IQueryable<Assignment> assignmentsQuery = _context.Assignments
-                .Where(a => a.CourseId == CID);
+            listLessons = await _context.Lessons
+                .Where(l => l.CourseId == CID)
+                .OrderBy(l => l.LessonId)  // Ensure lessons are in order
+                .ToListAsync();
 
-            listLessons = await lessonsQuery.ToListAsync();
-            listAssignments = await assignmentsQuery.ToListAsync();
+            listAssignments = await _context.Assignments
+                .Where(a => a.CourseId == CID)
+                .OrderBy(a => a.AssignmentId)  // Ensure assignments are in order
+                .ToListAsync();
 
-            ShowNoLessonsFound = listLessons.Count == 0;
+            ShowNoLessonsFound = !listLessons.Any();
         }
     }
 }

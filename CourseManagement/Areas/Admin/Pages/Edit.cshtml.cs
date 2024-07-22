@@ -71,7 +71,7 @@ namespace CourseManagement.Areas.Admin.Pages
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.TeacherId == id);
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.User.Id == id);
             if (teacher == null)
             {
                 return NotFound();
