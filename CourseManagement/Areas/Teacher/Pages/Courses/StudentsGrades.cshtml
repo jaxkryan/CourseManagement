@@ -15,9 +15,13 @@
 <body>
     <div class="container">
         <h1>Student Grades</h1>
-
+        
         @if (Model.StudentGrades != null && Model.StudentGrades.Any())
         {
+            <form method="post" asp-page-handler="ExportToExcel">
+                <input type="hidden" name="CourseId" value="@Model.CourseId" />
+                <button type="submit" class="btn btn-success">Export to Excel</button>
+            </form>
             <table>
                 <thead>
                     <tr>
