@@ -1,12 +1,27 @@
 ﻿@page "/RegisterConfirmation/"
 @model RegisterConfirmationModel
 @{
-    Layout = null;
-    ViewData["Title"] = "Xác nhận đăng ký";
+    Layout = "/Pages/Shared/_LoginLayout.cshtml";
+    ViewData["Title"] = "Confirm registration";
 }
 
-<h1>@ViewData["Title"]</h1>
-<p>
-    Một email đã gửi đến cho bạn, bạn cần mở email làm theo hướng dẫn trong email sau đó
-    <a asp-page="/Index">Bấm vào đây để trở về trang chủ</a>
-</p>
+<section class="vh-100">
+    <div class="container py-5 h-100">
+        <div class="row d-flex align-items-center justify-content-center h-100">
+            <div class="col-md-8 col-lg-7 col-xl-6">
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg"
+                     class="img-fluid" alt="Confirmation image">
+            </div>
+            <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
+                <div class="text-center">
+                    <h1>@ViewData["Title"]</h1>
+                    <p>
+                        An email has been sent to you. You need to open the email and follow the instructions in the email.
+                        Một email đã gửi đến cho bạn, bạn cần mở email làm theo hướng dẫn trong email sau đó
+                    </p>
+                    <a class="btn btn-primary btn-lg btn-block" asp-page="/Index">Click here to return to the home page</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

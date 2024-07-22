@@ -62,14 +62,12 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
-            [Required]
-            public string PhoneNumber { get; set; }
 
             [Required]
             public string Address { get; set; }
 
             [Required]
-            public DateTime Dob { get; set; }
+            public DateTime Dob { get; set; } = DateTime.Today;
 
             [Required]
             [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
@@ -154,7 +152,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 
                     if (roles.Contains("student"))
                     {
-                        returnUrl = "/Student/Index";
+                        returnUrl = "/Index";
                     }
                     else if (roles.Contains("admin"))
                     {
@@ -270,7 +268,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                         var roles = await _userManager.GetRolesAsync(userWithexternalMail);
                         if (roles.Contains("student"))
                         {
-                            returnUrl = "/Student/Index";
+                            returnUrl = "/Index";
                         }
                         else if (roles.Contains("admin"))
                         {
@@ -309,7 +307,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                     LastName = Input.LastName,
                     UserName = Input.Email,
                     Email = Input.Email,
-                    PhoneNumber = Input.PhoneNumber,
                     Address = Input.Address,
                     Dob = Input.Dob,
                     CreatedAt = DateTime.Now,
@@ -343,7 +340,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                             var roles = await _userManager.GetRolesAsync(user);
                             if (roles.Contains("student"))
                             {
-                                returnUrl = "/Student/Index";
+                                returnUrl = "/Index";
                             }
                             else if (roles.Contains("admin"))
                             {

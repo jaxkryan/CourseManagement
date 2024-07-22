@@ -48,7 +48,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             {
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
-				return Redirect("/Student/Index");
+				return Redirect("/Index");
 			}
             else
             {

@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Admin.Pages
 {
+    [Authorize(Roles = "admin")]
     public class IndexModel : PageModel
     {
         private readonly UserManager<WebUser> _userManager;
@@ -24,21 +26,45 @@ namespace CourseManagement.Areas.Admin.Pages
             _context = context;
         }
 
-        public IList<WebUser> Teachers { get; set; } = default!;
+        public IList<UserWithRoles> Users { get; set; } = default!;
+
+        public class UserWithRoles
+        {
+            public string Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+            public DateTime Dob { get; set; }
+            public string Address { get; set; }
+            public bool IsActive { get; set; }
+            public List<string> Roles { get; set; }
+        }
 
         public async Task OnGetAsync()
         {
-            var teacherRole = await _roleManager.FindByNameAsync("teacher");
-            if (teacherRole == null)
+            var users = await _userManager.Users.ToListAsync();
+            var userWithRoles = new List<UserWithRoles>();
+
+            foreach (var user in users)
             {
-                Teachers = new List<WebUser>();
-                return;
+                var roles = await _userManager.GetRolesAsync(user);
+                userWithRoles.Add(new UserWithRoles
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    Dob = user.Dob,
+                    Address = user.Address,
+                    IsActive = user.IsActive,
+                    Roles = roles.ToList()
+                });
             }
-            var usersInRole = await _userManager.GetUsersInRoleAsync("teacher");
-            Teachers = usersInRole.Where(u => u.IsActive).ToList();
+
+            Users = userWithRoles;
         }
 
-        public async Task<IActionResult> OnGetDeleteAsync(string userId)
+        public async Task<IActionResult> OnGetDisableAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -51,7 +77,38 @@ namespace CourseManagement.Areas.Admin.Pages
                 return NotFound($"Unable to find user with ID '{userId}'.");
             }
 
+            var roles = await _userManager.GetRolesAsync(user);
+            //if (!roles.Contains("teacher"))
+            //{
+            //    return BadRequest("Only teachers can be disabled.");
+            //}
+
             user.IsActive = false;
+            await _userManager.UpdateAsync(user);
+
+            return RedirectToPage();
+        }
+
+        public async Task<IActionResult> OnGetActivateAsync(string userId)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                return BadRequest("User ID is required.");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to find user with ID '{userId}'.");
+            }
+
+            var roles = await _userManager.GetRolesAsync(user);
+            //if (!roles.Contains("teacher"))
+            //{
+            //    return BadRequest("Only teachers can be activated.");
+            //}
+
+            user.IsActive = true;
             await _userManager.UpdateAsync(user);
 
             return RedirectToPage();
