@@ -75,72 +75,65 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(
-                    Input.UserNameOrEmail,
-                    Input.Password,
-                    Input.RememberMe,
-                    lockoutOnFailure: true
-                );
-
-                if (!result.Succeeded)
+                var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
+                if (user == null)
                 {
-                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
-                    if (user != null)
-                    {
-                        result = await _signInManager.PasswordSignInAsync(
-                            user,
-                            Input.Password,
-                            Input.RememberMe,
-                            lockoutOnFailure: true
-                        );
-                    }
+                    user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
                 }
 
-                if (result.Succeeded)
+                if (user != null)
                 {
-                    _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByNameAsync(Input.UserNameOrEmail);
-                    if (user == null)
+                    if (!user.EmailConfirmed)
                     {
-                        user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
+                        ModelState.AddModelError(string.Empty, "Please check your email for confirmation to log in.");
+                        return Page();
                     }
-                    var roles = await _userManager.GetRolesAsync(user);
-                    if (roles.Contains("student"))
+
+                    var result = await _signInManager.PasswordSignInAsync(
+                        user.UserName, // Use the UserName property of the user object
+                        Input.Password,
+                        Input.RememberMe,
+                        lockoutOnFailure: true
+                    );
+
+                    if (result.Succeeded)
                     {
-                        returnUrl = "/Student/Index";
+                        _logger.LogInformation("User logged in.");
+                        var roles = await _userManager.GetRolesAsync(user);
+                        if (roles.Contains("student"))
+                        {
+                            returnUrl = "/Student/Index";
+                        }
+                        else if (roles.Contains("admin"))
+                        {
+                            returnUrl = "/Admin/Index";
+                        }
+                        else if (roles.Contains("teacher"))
+                        {
+                            returnUrl = "/Teacher/Index";
+                        }
+                        else if (roles.Contains("parent"))
+                        {
+                            returnUrl = "/Parent/Index";
+                        }
+                        return LocalRedirect(returnUrl);
                     }
-                    else if (roles.Contains("admin"))
+
+                    if (result.RequiresTwoFactor)
                     {
-                        returnUrl = "/Admin/Index";
+                        return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                     }
-                    else if (roles.Contains("teacher"))
+                    if (result.IsLockedOut)
                     {
-                        returnUrl = "/Teacher/Index";
+                        _logger.LogWarning("Tài khoản bí tạm khóa.");
+                        return RedirectToPage("./Lockout");
                     }
-                    else if (roles.Contains("parent"))
-                    {
-                        returnUrl = "/Parent/Index";
-                    }
-                    return LocalRedirect(returnUrl);
                 }
-                if (result.RequiresTwoFactor)
-                {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
-                }
-                if (result.IsLockedOut)
-                {
-                    _logger.LogWarning("Tài khoản bí tạm khóa.");
-                    return RedirectToPage("./Lockout");
-                }
-                else
-                {
-                    ModelState.AddModelError(string.Empty, "Email/Username or Password error!");
-                    return Page();
-                }
+
+                ModelState.AddModelError(string.Empty, "Email/Username or Password error!");
             }
 
             return Page();
         }
-
     }
-}
+    }
