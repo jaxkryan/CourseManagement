@@ -1,11 +1,13 @@
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
+    [Authorize(Roles = "teacher")]
     public class StudentsGradesModel : PageModel
     {
         private readonly ApplicationDbContext _context;

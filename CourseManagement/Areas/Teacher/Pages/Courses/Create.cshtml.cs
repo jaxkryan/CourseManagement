@@ -11,9 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.CodeAnalysis;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
+    [Authorize(Roles = "teacher")]
     public class CreateModel : PageModel
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;

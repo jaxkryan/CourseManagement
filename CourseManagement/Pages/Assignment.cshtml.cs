@@ -1,6 +1,7 @@
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using IdentityServer4.Extensions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace CourseManagement.Pages
 {
+    [Authorize(Roles = "student")]
     public class AssignmentModel : PageModel
     {
 
