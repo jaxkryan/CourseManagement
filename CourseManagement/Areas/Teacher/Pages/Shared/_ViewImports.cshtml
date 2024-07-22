@@ -1,0 +1,11 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CourseManagement.Areas.Identity
+@using CourseManagement.Areas.Identity.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using CourseManagement.Models
+@functions {
+    public static string IsActive(string page, string currentPage)
+    {
+        return currentPage == page ? "active" : "";
+    }
+}
