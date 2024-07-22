@@ -1,8 +1,19 @@
 ﻿USE [master]
 GO
---Drop DATABASE [CourseManagement]
-/****** Object:  Database [CourseManagement]    Script Date: 7/22/2024 5:42:35 PM ******/
+/*******************************************************************************
+   Drop database if it exists
+********************************************************************************/
+IF EXISTS (SELECT name FROM master.dbo.sysdatabases WHERE name = N'CourseManagement')
+BEGIN
+	ALTER DATABASE [CourseManagement] SET OFFLINE WITH ROLLBACK IMMEDIATE;
+	ALTER DATABASE [CourseManagement] SET ONLINE;
+	DROP DATABASE [CourseManagement];
+END
+
+GO
+/****** Object:  Database [CourseManagement]    Script Date: 7/21/2024 3:03:43 PM ******/
 CREATE DATABASE [CourseManagement]
+ 
 GO
 ALTER DATABASE [CourseManagement] SET ANSI_NULL_DEFAULT OFF 
 GO
@@ -670,6 +681,68 @@ INSERT [dbo].[Questions] ([Qid], [QContent], [Opt1], [Opt2], [Opt3], [Opt4], [Co
 INSERT [dbo].[Questions] ([Qid], [QContent], [Opt1], [Opt2], [Opt3], [Opt4], [Correctans]) VALUES (49, N'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', N'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', N'In congue. Etiam justo. Etiam pretium iaculis justo.', N'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', N'Praesent id massa id nisl venenatis lacinia. Aenean sit amet justo. Morbi ut odio.', N'')
 INSERT [dbo].[Questions] ([Qid], [QContent], [Opt1], [Opt2], [Opt3], [Opt4], [Correctans]) VALUES (50, N'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', N'Pellentesque at nulla. Suspendisse potenti. Cras in purus eu magna vulputate luctus.', N'Curabitur gravida nisi at nibh. In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.', N'Duis bibendum, felis sed interdum venenatis, turpis enim blandit mi, in porttitor pede justo eu massa. Donec dapibus. Duis at velit eu est congue elementum.', N'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', N'')
 SET IDENTITY_INSERT [dbo].[Questions] OFF
+GO
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 1, '2024-02-15T17:48:17');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 2, '2024-11-10T02:15:44');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 3, '2024-04-19T18:37:32');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 4, '2024-12-30T22:30:13');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 5, '2024-08-15T11:36:26');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 6, '2024-01-01T06:53:22');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 7, '2024-09-12T14:43:43');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 8, '2024-12-19T05:16:28');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 9, '2024-02-10T22:23:50');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('cf43bb08-b822-4504-9ac3-7aa90627de4a', 10, '2024-05-05T14:49:37');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 1, '2024-11-12T10:11:01');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 2, '2024-01-19T18:14:42');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 3, '2024-05-07T15:41:13');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 4, '2024-10-19T22:16:27');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 5, '2024-12-25T02:43:03');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 6, '2024-05-18T08:35:02');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 7, '2024-07-29T04:40:59');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 8, '2024-01-22T09:43:24');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 9, '2024-01-06T05:35:45');
+insert into Enrollments (UserId, CourseId, EnrolledAt) values ('19782963-c520-43a6-94f8-b755c095f940', 10, '2024-10-12T07:02:23');
+GO
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (1, '19782963-c520-43a6-94f8-b755c095f940', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', '10/20/2002 20:44:27.000', 22.08);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (2, '19782963-c520-43a6-94f8-b755c095f940', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', '9/25/1931 11:51:34.000', 94.3);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (3, '19782963-c520-43a6-94f8-b755c095f940', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', '9/1/1918 20:40:21.000', 98.13);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (4, '19782963-c520-43a6-94f8-b755c095f940', 'Maecenas tristique, est et tempus semper, est quam pharetra magna, ac consequat metus sapien ut nunc. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris viverra diam vitae quam. Suspendisse potenti.', '3/13/2019 11:33:51.000', 45.56);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (5, '19782963-c520-43a6-94f8-b755c095f940', 'Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Vivamus vestibulum sagittis sapien. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', '8/26/2020 23:26:16.000', 60.53);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (6, '19782963-c520-43a6-94f8-b755c095f940', 'Integer tincidunt ante vel ipsum. Praesent blandit lacinia erat. Vestibulum sed magna at nunc commodo placerat.', '4/1/1979 15:48:21.000', 3.2);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (7, '19782963-c520-43a6-94f8-b755c095f940', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '11/23/1917 20:18:19.000', 36.32);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (8, '19782963-c520-43a6-94f8-b755c095f940', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', '6/30/1919 10:12:46.000', 40.62);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (9, '19782963-c520-43a6-94f8-b755c095f940', 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', '11/28/1918 21:47:42.000', 20.3);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (10, '19782963-c520-43a6-94f8-b755c095f940', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', '1/20/1959 05:00:54.000', 34.22);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (11, '19782963-c520-43a6-94f8-b755c095f940', 'Phasellus in felis. Donec semper sapien a libero. Nam dui.', '6/18/1984 13:06:36.000', 93.11);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (12, '19782963-c520-43a6-94f8-b755c095f940', 'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Proin risus. Praesent lectus.', '5/8/1963 21:35:33.000', 68.18);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (13, '19782963-c520-43a6-94f8-b755c095f940', 'Nullam sit amet turpis elementum ligula vehicula consequat. Morbi a ipsum. Integer a nibh.', '9/5/1979 10:18:21.000', 84.36);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (14, '19782963-c520-43a6-94f8-b755c095f940', 'Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum.', '10/8/2019 12:32:46.000', 50.54);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (15, '19782963-c520-43a6-94f8-b755c095f940', 'Duis bibendum. Morbi non quam nec dui luctus rutrum. Nulla tellus.', '3/8/1915 07:14:58.000', 81.72);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (16, '19782963-c520-43a6-94f8-b755c095f940', 'Morbi non lectus. Aliquam sit amet diam in magna bibendum imperdiet. Nullam orci pede, venenatis non, sodales sed, tincidunt eu, felis.', '7/18/1959 22:45:24.000', 73.38);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (17, '19782963-c520-43a6-94f8-b755c095f940', 'Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.', '6/20/1998 06:34:00.000', 23.96);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (18, '19782963-c520-43a6-94f8-b755c095f940', 'Sed ante. Vivamus tortor. Duis mattis egestas metus.', '10/11/1952 11:54:14.000', 69.12);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (19, '19782963-c520-43a6-94f8-b755c095f940', 'Duis consequat dui nec nisi volutpat eleifend. Donec ut dolor. Morbi vel lectus in quam fringilla rhoncus.', '9/16/1971 04:38:19.000', 92.17);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (20, '19782963-c520-43a6-94f8-b755c095f940', 'In quis justo. Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.', '2/13/1926 04:15:34.000', 48.81);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (1, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', '8/3/2007 19:59:48.000', 20.57);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (2, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Phasellus sit amet erat. Nulla tempus. Vivamus in felis eu sapien cursus vestibulum.', '12/24/1957 11:13:12.000', 21.11);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (3, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Proin leo odio, porttitor id, consequat in, consequat ut, nulla. Sed accumsan felis. Ut at dolor quis odio consequat varius.', '8/11/2019 17:09:30.000', 37.17);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (4, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Sed sagittis. Nam congue, risus semper porta volutpat, quam pede lobortis ligula, sit amet eleifend pede libero quis orci. Nullam molestie nibh in lectus.', '1/5/1989 17:07:45.000', 23.86);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (5, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Suspendisse potenti. In eleifend quam a odio. In hac habitasse platea dictumst.', '8/27/1922 19:17:20.000', 76.73);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (6, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Praesent blandit. Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', '4/28/1931 08:34:22.000', 19.76);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (7, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.', '10/9/1926 01:57:39.000', 15.4);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (8, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero.', '2/21/1940 19:22:03.000', 93.32);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (9, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '9/29/1980 06:31:34.000', 30.4);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (10, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Curabitur at ipsum ac tellus semper interdum. Mauris ullamcorper purus sit amet nulla. Quisque arcu libero, rutrum ac, lobortis vel, dapibus at, diam.', '6/17/1958 06:54:36.000', 76.74);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (11, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.', '11/18/2022 05:14:56.000', 63.0);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (12, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Nulla ut erat id mauris vulputate elementum. Nullam varius. Nulla facilisi.', '1/18/1907 04:58:45.000', 79.19);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (13, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Morbi porttitor lorem id ligula. Suspendisse ornare consequat lectus. In est risus, auctor sed, tristique in, tempus sit amet, sem.', '12/5/1970 13:11:11.000', 28.61);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (14, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Integer ac leo. Pellentesque ultrices mattis odio. Donec vitae nisi.', '6/2/1908 06:25:11.000', 37.73);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (15, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Cras mi pede, malesuada in, imperdiet et, commodo vulputate, justo. In blandit ultrices enim. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.', '10/19/1944 14:20:21.000', 54.03);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (16, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'In sagittis dui vel nisl. Duis ac nibh. Fusce lacus purus, aliquet at, feugiat non, pretium quis, lectus.', '7/16/1986 15:31:44.000', 75.01);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (17, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Cras non velit nec nisi vulputate nonummy. Maecenas tincidunt lacus at velit. Vivamus vel nulla eget eros elementum pellentesque.', '6/24/2003 13:30:11.000', 97.55);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (18, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Nam ultrices, libero non mattis pulvinar, nulla pede ullamcorper augue, a suscipit nulla elit ac nulla. Sed vel enim sit amet nunc viverra dapibus. Nulla suscipit ligula in lacus.', '7/29/1907 12:16:55.000', 63.23);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (19, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Etiam vel augue. Vestibulum rutrum rutrum neque. Aenean auctor gravida sem.', '3/5/1987 19:40:33.000', 75.27);
+insert into Submissions (AssignmentId, UserId, Content, SubmittedAt, Grade) values (20, 'cf43bb08-b822-4504-9ac3-7aa90627de4a', 'Aliquam quis turpis eget elit sodales scelerisque. Mauris sit amet eros. Suspendisse accumsan tortor quis turpis.', '3/25/1906 20:18:54.000', 68.49);
 GO
 SET ANSI_PADDING ON
 GO
