@@ -11,19 +11,34 @@ using CourseManagement.Pages.Service;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
     [Authorize(Roles = "teacher")]
     public class EditModel : PageModel
     {
+        private readonly UserManager<WebUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
 
-        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
-
+        public class UserWithRoles
+        {
+            public string Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+            public DateTime Dob { get; set; }
+            public string Address { get; set; }
+            public bool IsActive { get; set; }
+            public List<string> Roles { get; set; }
+        }
         [BindProperty]
         public Course Course { get; set; }
 
@@ -40,10 +55,35 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             if (Course == null)
             {
                 return NotFound();
-            }
-            ViewData["InstructorId"] = new SelectList(_context.Users, "Id", "Id");
+            } 
+            // Fetch and populate the list of teachers
+            var teachers = await GetTeachersAsync();
+            ViewData["InstructorId"] = new SelectList(teachers, "Value", "Text");
             return Page();
 
+        }
+
+        private async Task<List<SelectListItem>> GetTeachersAsync()
+        {
+            // Fetch all users
+            var Teachers = new List<WebUser>();
+
+            // Ensure the "teacher" role exists
+            var teacherRole = await _roleManager.FindByNameAsync("teacher");
+            if (teacherRole == null)
+            {
+                // Handle the case where the "teacher" role does not exist
+                Teachers = new List<WebUser>();
+            }
+
+            // Get users with the "teacher" role
+            var usersInRole = await _userManager.GetUsersInRoleAsync("teacher");
+            Teachers = usersInRole.Where(u => u.IsActive).ToList();
+            return Teachers.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
         }
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.

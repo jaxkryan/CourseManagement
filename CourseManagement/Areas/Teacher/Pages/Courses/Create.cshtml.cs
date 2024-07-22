@@ -6,11 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using CourseManagement.Models;
-using CourseManagement.Pages.Service;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.CodeAnalysis;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
@@ -19,33 +16,47 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
     public class CreateModel : PageModel
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
-
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<WebUser> _userManager;
-        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager)
+
+        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager,RoleManager<IdentityRole> roleManager)
         {
             _context = context;
+            _roleManager = roleManager;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
-            ViewData["InstructorId"] = new SelectList(_context.Users, "Id", "LastName");
+            // Fetch and populate the list of teachers
+            var teachers = await GetTeachersAsync();
+            ViewData["InstructorId"] = new SelectList(teachers, "Value", "Text");
+
             return Page();
         }
-       
 
         [BindProperty]
         public Course Course { get; set; }
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
+        public class UserWithRoles
+        {
+            public string Id { get; set; }
+            public string FirstName { get; set; }
+            public string LastName { get; set; }
+            public string Email { get; set; }
+            public DateTime Dob { get; set; }
+            public string Address { get; set; }
+            public bool IsActive { get; set; }
+            public List<string> Roles { get; set; }
+        }
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
             {
                 var errors = ModelState
-    .Where(x => x.Value.Errors.Count > 0)
-    .Select(x => new { x.Key, x.Value.Errors })
-    .ToArray();
+                    .Where(x => x.Value.Errors.Count > 0)
+                    .Select(x => new { x.Key, x.Value.Errors })
+                    .ToArray();
                 Console.WriteLine(errors);
 
                 return Page();
@@ -55,6 +66,29 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
+        }
+
+        private async Task<List<SelectListItem>> GetTeachersAsync()
+        {
+            // Fetch all users
+            var Teachers = new List<WebUser>();
+
+            // Ensure the "teacher" role exists
+            var teacherRole = await _roleManager.FindByNameAsync("teacher");
+            if (teacherRole == null)
+            {
+                // Handle the case where the "teacher" role does not exist
+                Teachers = new List<WebUser>();
+            }
+
+            // Get users with the "teacher" role
+            var usersInRole = await _userManager.GetUsersInRoleAsync("teacher");
+            Teachers = usersInRole.Where(u => u.IsActive).ToList();
+            return Teachers.Select(u => new SelectListItem
+            {
+                Value = u.Id,
+                Text = $"{u.FirstName} {u.LastName}"
+            }).ToList();
         }
     }
 }
