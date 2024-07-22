@@ -17,6 +17,7 @@ namespace CourseManagement.Pages
         private readonly UserManager<WebUser> _userManager;
         private readonly ApplicationDbContext _context;
         public List<Lesson> listLessons { get; private set; }
+        public List<Assignment> listAssignments { get; private set; }
         public bool ShowNoLessonsFound { get; private set; }
         public WebUser CurrentUser { get; private set; }
         public int CID { get; set; } // Added property to receive courseid
@@ -42,8 +43,11 @@ namespace CourseManagement.Pages
         {
             IQueryable<Lesson> lessonsQuery = _context.Lessons
                 .Where(l => l.CourseId == CID);
+            IQueryable<Assignment> assignmentsQuery = _context.Assignments
+                .Where(a => a.CourseId == CID);
 
             listLessons = await lessonsQuery.ToListAsync();
+            listAssignments = await assignmentsQuery.ToListAsync();
 
             ShowNoLessonsFound = listLessons.Count == 0;
         }
