@@ -1,0 +1,94 @@
+﻿@page
+@model LessonsModel
+@using CourseManagement.Models
+@{
+
+}
+<style>
+    .video-container {
+        position: relative;
+        padding-bottom: 56.25%; /* Tỷ lệ mặc định 16:9 (height/width) */
+        height: 0;
+        overflow: hidden;
+        max-width: 100%;
+    }
+
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Course: @ViewData["Cname"]</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+    <!-- Categories Start -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center text-primary px-3">Lessons</h6>
+                <h1 class="mb-5">Watch videos below then do the quiz:</h1>
+            </div>
+            @if (@Model.listLessons != null && @Model.listLessons.Any())
+            {
+                <div id="course-list" class="row g-4 justify-content-center">
+                    @foreach (var course in @Model.listLessons)
+                    {
+                        <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                            <div class="course-item bg-light">
+                                <div class="position-relative overflow-hidden">
+                                    <div class="video-container">
+                                        @Html.Raw(course.Link)
+                                    </div>
+                                </div>
+                                <div class="text-center p-4 pb-0">
+                                    <h3 class="mb-0">$149.00</h3>
+                                    <div class="mb-3">
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small class="fa fa-star text-primary"></small>
+                                        <small>(123)</small>
+                                    </div>
+                                    <h5 class="mb-4">@course.LessonTitle</h5>
+                                </div>
+                                <div class="d-flex border-top">
+                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-user-tie text-primary me-2"></i>John Doe</small>
+                                    <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>1.49 Hrs</small>
+                                    <small class="flex-fill text-center py-2"><i class="fa fa-user text-primary me-2"></i>30 Students</small>
+                                </div>
+                            </div>
+                            
+                        </div>
+                    }
+                    @foreach (var assignment in Model.listAssignments.Select((a, index) => new { Assignment = a, Index = index + 1 }))
+                    {
+                        <a href="/Assignment?assignmentId=@assignment.Assignment.AssignmentId" class="btn btn-primary mt-2">Do Assignment @assignment.Index</a>
+                    }
+                </div>
+
+            }
+            else
+            {
+                <p>No lesson found.</p>
+            }
+        </div>
+    </div>
+</body>
+</html>
+
