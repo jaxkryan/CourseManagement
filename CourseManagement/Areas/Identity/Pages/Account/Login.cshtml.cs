@@ -88,7 +88,9 @@ namespace CourseManagement.Areas.Identity.Pages.Account
                         ModelState.AddModelError(string.Empty, "Please check your email for confirmation to log in.");
                         return Page();
                     }
-
+                    if (user.IsActive == false) {
+                        return RedirectToPage("./Lockout");
+                    }
                     var result = await _signInManager.PasswordSignInAsync(
                         user.UserName, // Use the UserName property of the user object
                         Input.Password,
