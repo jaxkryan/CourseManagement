@@ -2,7 +2,7 @@ using CourseManagement.Models;
 using CourseManagement.EmailSender;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
-//using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
