@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Identity;
 using CourseManagement.Models;
 using System.ComponentModel.DataAnnotations;
 using CourseManagement.Pages.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Admin.Pages
 {
+    [Authorize(Roles = "admin")]
     public class CreateModel : PageModel
     {
         private readonly UserManager<WebUser> _userManager;

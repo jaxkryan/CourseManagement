@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Questions
 {
+    [Authorize(Roles = "teacher")]
     public class DeleteModel : PageModel
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;

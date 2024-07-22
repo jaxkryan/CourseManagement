@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Assignments
 {
+    [Authorize(Roles = "teacher")]
     public class CreateModel : PageModel
     {
         private readonly ApplicationDbContext _context;

@@ -10,9 +10,11 @@ using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Courses
 {
+    [Authorize(Roles = "teacher")]
     public class EditModel : PageModel
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
