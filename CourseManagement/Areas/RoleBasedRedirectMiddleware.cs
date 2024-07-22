@@ -24,6 +24,16 @@ namespace CourseManagement.Areas
                     context.Response.Redirect("/admin/index");
                     return;
                 }
+                if (roles.Contains("teacher") && context.Request.Path.Equals("/index", StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Response.Redirect("/teacher/index");
+                    return;
+                }
+                if (roles.Contains("student") && context.Request.Path.Equals("/index", StringComparison.OrdinalIgnoreCase))
+                {
+                    context.Response.Redirect("/student/index");
+                    return;
+                }
             }
 
             await _next(context);
