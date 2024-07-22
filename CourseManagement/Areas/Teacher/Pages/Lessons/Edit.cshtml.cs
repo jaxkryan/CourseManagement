@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -39,12 +38,14 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
             {
                 return NotFound();
             }
-           ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
+
+            // Populate CourseId dropdown list
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
+
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -63,8 +64,11 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
             lessonToUpdate.CourseId = Lesson.CourseId;
             lessonToUpdate.LessonTitle = Lesson.LessonTitle;
             lessonToUpdate.Content = Lesson.Content;
-            lessonToUpdate.CreatedAt = Lesson.CreatedAt;
             lessonToUpdate.Link = Lesson.Link;
+            // CreatedAt remains unchanged
+
+            // Update Level
+            lessonToUpdate.Level = Lesson.Level;
 
             try
             {
@@ -84,7 +88,6 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
 
             return RedirectToPage("./Index");
         }
-
 
         private bool LessonExists(int id)
         {

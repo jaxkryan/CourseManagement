@@ -19,7 +19,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<WebUser> _userManager;
 
-        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager,RoleManager<IdentityRole> roleManager)
+        public CreateModel(CourseManagement.Pages.Service.ApplicationDbContext context, UserManager<WebUser> userManager, RoleManager<IdentityRole> roleManager)
         {
             _context = context;
             _roleManager = roleManager;
@@ -49,6 +49,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             public bool IsActive { get; set; }
             public List<string> Roles { get; set; }
         }
+
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -61,6 +62,9 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
 
                 return Page();
             }
+
+            // Set the CreatedAt field to the current time
+            Course.CreatedAt = DateTime.UtcNow;
 
             _context.Courses.Add(Course);
             await _context.SaveChangesAsync();

@@ -23,14 +23,13 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
 
         public IActionResult OnGet()
         {
-        ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseId");
+            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
             return Page();
         }
 
         [BindProperty]
         public Lesson Lesson { get; set; }
 
-        // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -38,6 +37,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
                 return Page();
             }
 
+            Lesson.CreatedAt = DateTime.UtcNow; // Set CreatedAt to the current UTC time
             _context.Lessons.Add(Lesson);
             await _context.SaveChangesAsync();
 

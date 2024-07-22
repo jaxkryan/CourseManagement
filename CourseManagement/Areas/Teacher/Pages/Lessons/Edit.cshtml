@@ -31,9 +31,14 @@
                 <span asp-validation-for="Lesson.Content" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Lesson.CreatedAt" class="control-label"></label>
-                <input asp-for="Lesson.CreatedAt" class="form-control" />
-                <span asp-validation-for="Lesson.CreatedAt" class="text-danger"></span>
+                <label asp-for="Lesson.Level" class="control-label"></label>
+                <select asp-for="Lesson.Level" class="form-control">
+                    <option value="">Select Level</option>
+                    <option value="Advanced">Advanced</option>
+                    <option value="Intermediate">Intermediate</option>
+                    <option value="Beginner">Beginner</option>
+                </select>
+                <span asp-validation-for="Lesson.Level" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Lesson.Link" class="control-label"></label>
@@ -52,5 +57,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
