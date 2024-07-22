@@ -38,10 +38,11 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
             {
-                return NotFound($"Không tồn tại User - '{userId}'.");
+                return NotFound($"User not found - '{userId}'.");
             }
 
             code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+
             var result = await _userManager.ConfirmEmailAsync(user, code);
 
             if (result.Succeeded)
@@ -52,7 +53,7 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 			}
             else
             {
-                StatusMessage = "Lỗi xác nhận email";
+                StatusMessage = "Email confirmation failed";
             }
 
             return Page();

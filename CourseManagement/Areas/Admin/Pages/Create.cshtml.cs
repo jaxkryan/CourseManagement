@@ -7,6 +7,9 @@ using CourseManagement.Models;
 using System.ComponentModel.DataAnnotations;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authorization;
+using CourseManagement.EmailSender;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace CourseManagement.Areas.Admin.Pages
 {
@@ -16,13 +19,16 @@ namespace CourseManagement.Areas.Admin.Pages
         private readonly UserManager<WebUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
+        private readonly ISendMailService _emailSender;
 
-        public CreateModel(UserManager<WebUser> userManager, RoleManager<IdentityRole> roleManager,ApplicationDbContext context)
+        public CreateModel(UserManager<WebUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context, ISendMailService emailSender)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
+            _emailSender = emailSender;
         }
+
 
         [BindProperty]
         public InputModel Input { get; set; }
@@ -106,12 +112,27 @@ namespace CourseManagement.Areas.Admin.Pages
                         Biography = Input.Biography
                     };
 
-                    // Here you would typically save the teacher entity to your database
+                    // Save the teacher entity to your database
                     _context.Teachers.Add(teacher);
-                    _context.SaveChanges();
+                    await _context.SaveChangesAsync();
+
+                    // Generate email confirmation token
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    code = code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                    var callbackUrl = Url.Page(
+                        "/Account/ConfirmEmail",
+                        pageHandler: null,
+                        values: new { area = "Identity", userId = user.Id, code = code },
+                        protocol: Request.Scheme);
+
+                    // Send confirmation email
+                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
+                        $"Please confirm your email by <a href='{callbackUrl}'>clicking here</a>.");
 
                     return RedirectToPage("./Index");
                 }
+
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(string.Empty, error.Description);
@@ -121,5 +142,6 @@ namespace CourseManagement.Areas.Admin.Pages
             // If we got this far, something failed, redisplay form
             return Page();
         }
+
     }
 }
