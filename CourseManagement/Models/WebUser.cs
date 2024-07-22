@@ -6,21 +6,21 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CourseManagement.Models
 {
-public class WebUser : IdentityUser
-{
-    public string FirstName { get; set; } = "";
-    public string LastName { get; set; } = "";
-    public DateTime Dob { get; set; }
-    public string Address { get; set; } = "";
-    public DateTime CreatedAt { get; set; }
-    public string? Image { get; set; }
-    public bool IsActive { get; set; } = true; 
-    public virtual ICollection<Enrollment> Enrollments { get; set; }
-    public virtual Teacher Teacher { get; set; }
-    public virtual Admin Admin { get; set; }
-    public virtual Parent Parent { get; set; }
-    public virtual ICollection<Submission> Submissions { get; set; }
-}
+    public class WebUser : IdentityUser
+    {
+        public string FirstName { get; set; } = "";
+        public string LastName { get; set; } = "";
+        public DateTime Dob { get; set; }
+        public string Address { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public string? Image { get; set; }
+        public bool IsActive { get; set; } = true;
+        public virtual ICollection<Enrollment> Enrollments { get; set; }
+        public virtual Teacher Teacher { get; set; }
+        public virtual Admin Admin { get; set; }
+        public virtual Parent Parent { get; set; }
+        public virtual ICollection<Submission> Submissions { get; set; }
+    }
 
     public class Course
     {
@@ -32,7 +32,7 @@ public class WebUser : IdentityUser
         public string InstructorId { get; set; }
         public WebUser? Instructor { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? Image { get; set; } 
+        public string? Image { get; set; }
         public virtual ICollection<Lesson>? Lessons { get; set; }
         public virtual ICollection<Assignment>? Assignments { get; set; }
         public virtual ICollection<Enrollment>? Enrollments { get; set; }
@@ -52,20 +52,20 @@ public class WebUser : IdentityUser
         public DateTime EnrolledAt { get; set; } = DateTime.UtcNow;
     }
 
-        public class Lesson
-        {
-            public int LessonId { get; set; }
+    public class Lesson
+    {
+        public int LessonId { get; set; }
 
-            [ForeignKey("Course")]
-            public int CourseId { get; set; }
-            public Course? Course { get; set; }
+        [ForeignKey("Course")]
+        public int CourseId { get; set; }
+        public Course? Course { get; set; }
 
-            public string LessonTitle { get; set; }
-            public string Content { get; set; }
-            public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-            public string? Link { get; set; }
-            public string Level { get; set; }
-        }
+        public string LessonTitle { get; set; }
+        public string Content { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public string? Link { get; set; }
+        public string Level { get; set; }
+    }
     public class Assignment
     {
         public int AssignmentId { get; set; }
