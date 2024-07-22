@@ -50,18 +50,38 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             }
 
             Course = await _context.Courses
-                .Include(c => c.Instructor).FirstOrDefaultAsync(m => m.CourseId == id);
+                .Include(c => c.Instructor)
+                .FirstOrDefaultAsync(m => m.CourseId == id);
 
             if (Course == null)
             {
                 return NotFound();
-            } 
-            // Fetch and populate the list of teachers
-            var teachers = await GetTeachersAsync();
-            ViewData["InstructorId"] = new SelectList(teachers, "Value", "Text");
-            return Page();
+            }
 
+            // Get the current user's email
+            var email = User.Identity.Name;
+
+            // Retrieve the current user
+            var currentUser = await _userManager.FindByEmailAsync(email);
+
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
+            // Create a SelectListItem for the current user
+            var instructor = new SelectListItem
+            {
+                Value = currentUser.Id,
+                Text = $"{currentUser.FirstName} {currentUser.LastName}"
+            };
+
+            // Set the ViewData with the current user as the only instructor
+            ViewData["InstructorId"] = new SelectList(new List<SelectListItem> { instructor }, "Value", "Text", Course.InstructorId);
+
+            return Page();
         }
+
 
         private async Task<List<SelectListItem>> GetTeachersAsync()
         {

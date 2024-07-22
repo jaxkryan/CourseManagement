@@ -28,12 +28,35 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
 
         public async Task<IActionResult> OnGetAsync()
         {
-            // Fetch and populate the list of teachers
-            var teachers = await GetTeachersAsync();
-            ViewData["InstructorId"] = new SelectList(teachers, "Value", "Text");
+            // Get the current user's email
+            var email = User.Identity.Name;
 
+            if (email != null)
+            {
+                // Retrieve the current user
+                var currentUser = await _userManager.FindByEmailAsync(email);
+
+                if (currentUser != null)
+                {
+                    // Create a SelectListItem for the current user
+                    var instructor = new SelectListItem
+                    {
+                        Value = currentUser.Id,
+                        Text = $"{currentUser.FirstName} {currentUser.LastName}"
+                    };
+
+                    // Set the instructor in ViewData
+                    ViewData["InstructorId"] = new SelectList(new List<SelectListItem> { instructor }, "Value", "Text");
+
+                    return Page();
+                }
+            }
+
+            // Handle the case where the current user is not found or email is null
+            ViewData["InstructorId"] = new SelectList(new List<SelectListItem>(), "Value", "Text");
             return Page();
         }
+
 
         [BindProperty]
         public Course Course { get; set; }
@@ -74,6 +97,7 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
 
         private async Task<List<SelectListItem>> GetTeachersAsync()
         {
+
             // Fetch all users
             var Teachers = new List<WebUser>();
 

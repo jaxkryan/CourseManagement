@@ -133,8 +133,14 @@ namespace CourseManagement.Areas.Identity.Pages.Account
 
                 ModelState.AddModelError(string.Empty, "Email/Username or Password error!");
             }
+            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             return Page();
+        }
+        public IActionResult OnPostGoBack()
+        {
+            string returnUrl = "/Index"; 
+            return LocalRedirect(returnUrl);
         }
     }
     }

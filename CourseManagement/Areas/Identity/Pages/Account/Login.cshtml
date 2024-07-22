@@ -43,17 +43,29 @@
                     <!-- Submit button -->
                     <button type="submit" class="btn btn-primary btn-lg btn-block">Sign in</button>
 
-@*                     <button asp-page="./Register" class="btn btn-primary btn-lg btn-block mb-3">Sign up</button> *@
+                    <!-- Sign up button -->
                     <div class="btn btn-warning btn-lg btn-block mb-3">
                         <a asp-page="./Register" style="color: white;">Sign up</a>
                     </div>
-                    <div class="divider d-flex align-items-center my-4">
-                        <hr class="flex-grow-1" style="border-top: 1px dashed #dee2e6;">
-                        <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
-                        <hr class="flex-grow-1" style="border-top: 1px dashed #dee2e6;">
-                    </div>
-                </form>
 
+                    
+
+
+
+
+                    
+                </form>
+                <!-- Go back button -->
+                    <form method="post" asp-page-handler="GoBack" class="mb-3">
+                        <button type="submit" class="btn btn-secondary btn-lg btn-block">
+                            Go back
+                        </button>
+                    </form>
+                <div class="divider d-flex align-items-center my-4">
+                    <hr class="flex-grow-1" style="border-top: 1px dashed #dee2e6;">
+                    <p class="text-center fw-bold mx-3 mb-0 text-muted">OR</p>
+                    <hr class="flex-grow-1" style="border-top: 1px dashed #dee2e6;">
+                </div>
                 <div>
                     @if ((Model.ExternalLogins?.Count ?? 0) != 0)
                     {
@@ -63,7 +75,6 @@
                                 @if (provider.Name.ToLower() == "google")
                                 {
                                     <button type="submit" class="btn btn-danger btn-lg btn-block" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
-
                                         <i class="fab fa-google me-2"></i>Continue with Google
                                     </button>
                                 }
