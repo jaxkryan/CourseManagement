@@ -46,10 +46,9 @@ namespace CourseManagement.Pages
             {
                 if (!ModelState.IsValid)
                 {
-                    // Handle validation errors if any
                     return Page();
                 }
-                
+
                 var currentUser = await _userManager.GetUserAsync(User);
                 List<StudentResponse> studentResponses = new List<StudentResponse>();
                 Submission submission = new Submission
@@ -59,50 +58,54 @@ namespace CourseManagement.Pages
                     SubmittedAt = DateTime.Now,
                 };
 
-                // Save submission to get SubmissionId
                 await _context.Submissions.AddAsync(submission);
-                await _context.SaveChangesAsync(); // Save submission to get SubmissionId
+                await _context.SaveChangesAsync();
 
                 float correct = 0;
 
-                foreach (var (questionId, selectedOption) in selectedAnswers)
+                if (selectedAnswers != null && selectedAnswers.Any())
                 {
-                    var question = await _context.Questions.FindAsync(questionId);
-                    if (question != null && selectedOption != null)
+                    foreach (var (questionId, selectedOption) in selectedAnswers)
                     {
-                        bool isCorrect = (question.Correctans.Equals(selectedOption));
-                        if (isCorrect)
+                        // Skip processing for dummy values
+                        if (selectedOption == "0")
                         {
-                            correct++;
+                            continue;
                         }
-                        StudentResponse response = new StudentResponse
+
+                        var question = await _context.Questions.FindAsync(questionId);
+                        if (question != null)
                         {
-                            QuestionId = questionId,
-                            SubmissionId = submission.SubmissionId, // Assign SubmissionId from saved submission
-                            SelectedAnswer = selectedOption.ToString(),
-                            IsCorrect = isCorrect
-                        };
-                        studentResponses.Add(response);
+                            bool isCorrect = !string.IsNullOrEmpty(selectedOption) && question.Correctans.Equals(selectedOption, StringComparison.OrdinalIgnoreCase);
+                            if (isCorrect)
+                            {
+                                correct++;
+                            }
+                            StudentResponse response = new StudentResponse
+                            {
+                                QuestionId = questionId,
+                                SubmissionId = submission.SubmissionId,
+                                SelectedAnswer = selectedOption ?? string.Empty,
+                                IsCorrect = isCorrect
+                            };
+                            studentResponses.Add(response);
+                        }
                     }
                 }
 
-                // Calculate grade
                 float total = _context.AssignmentQuestion.Count(q => q.AssignmentId == assignmentId);
-                submission.Grade = (correct / total) * 100;
+                submission.Grade = (total > 0) ? (correct / total) * 100 : 0;
                 Console.WriteLine($"-------------------------- correct: {correct}, total: {total}");
 
-                // Save all student responses
                 await _context.StudentResponses.AddRangeAsync(studentResponses);
                 await _context.SaveChangesAsync();
 
-                // Redirect to AssignmentResultModel and pass submissionId as query string
                 return RedirectToPage("/AssignmentResult", new { submissionId = submission.SubmissionId });
             }
             catch (Exception ex)
             {
-                // Log exception for debugging
                 Console.WriteLine($"---------------------------------- Exception occurred: {ex.Message}");
-                throw; // Rethrow exception to display error page or handle it appropriately
+                throw;
             }
         }
     }

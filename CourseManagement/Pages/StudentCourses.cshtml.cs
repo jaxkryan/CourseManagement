@@ -11,7 +11,7 @@ using CourseManagement.Pages.Service;
 
 namespace CourseManagement.Pages
 {
-    //[Authorize(Roles = "student")]
+    [Authorize(Roles = "student")]
     public class StudentCoursesModel : PageModel
     {
         private readonly UserManager<WebUser> _userManager;

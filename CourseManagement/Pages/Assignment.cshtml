@@ -42,12 +42,13 @@
                         <input class="form-check-input" type="radio" name="selectedAnswers[@question.Question.Qid]" value="4">
                         <label class="form-check-label">@question.Question.Opt4</label>
                     </div>
+                    <!-- Hidden field with a default value to ensure at least one value is sent -->
+                    <input type="hidden" name="selectedAnswers[@question.Question.Qid]" value="0">
                 </div>
             </div>
         }
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
-
 }
 else
 {
