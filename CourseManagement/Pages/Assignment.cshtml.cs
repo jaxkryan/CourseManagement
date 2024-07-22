@@ -1,5 +1,6 @@
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,10 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace CourseManagement.Pages
 {
     public class AssignmentModel : PageModel
     {
+
         private readonly UserManager<WebUser> _userManager;
         private readonly ApplicationDbContext _context;
 
@@ -108,3 +111,4 @@ namespace CourseManagement.Pages
         }
     }
 }
+

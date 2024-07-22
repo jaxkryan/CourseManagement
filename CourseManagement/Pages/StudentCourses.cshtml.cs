@@ -20,6 +20,7 @@ namespace CourseManagement.Pages
         public int CurrentPage { get; set; }
         public int TotalPages { get; private set; }
         public bool ShowNoCoursesFound { get; private set; }
+
         public int UserId {  get; private set; }
 
         public WebUser CurrentUser { get; private set; }

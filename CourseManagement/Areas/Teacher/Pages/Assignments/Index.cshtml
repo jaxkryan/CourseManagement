@@ -52,9 +52,9 @@
                     @Html.DisplayFor(modelItem => item.CreatedAt)
                 </td>
                 <td>
-                    <a asp-page="Edit" asp-route-id="@item.AssignmentId" class="btn btn-info">Edit</a>
-                    <a asp-page="Details" asp-route-id="@item.AssignmentId" class="btn btn-secondary">Details</a>
-                    <a asp-page="Delete" asp-route-id="@item.AssignmentId" class="btn btn-danger">Delete</a>
+                    <a asp-page="Edit" asp-route-id="@item.AssignmentId" class="btn btn-info btn-sm">Edit</a>
+                    <a asp-page="Details" asp-route-id="@item.AssignmentId" class="btn btn-secondary btn-sm">Details</a>
+                    <a asp-page="Delete" asp-route-id="@item.AssignmentId" class="btn btn-danger btn-sm">Delete</a>
                 </td>
             </tr>
         }
@@ -77,3 +77,10 @@
         </li>
     </ul>
 </nav>
+
+<style>
+    .btn-sm {
+        width: 70px; /* Adjust the width as needed */
+        margin-right: 5px; /* Optional: add some space between buttons */
+    }
+</style>
