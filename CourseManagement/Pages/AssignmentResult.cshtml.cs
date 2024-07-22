@@ -14,6 +14,7 @@ namespace CourseManagement.Pages
         private readonly ApplicationDbContext _context;
 
         public Submission Submission { get; private set; }
+        public int CourseId { get; private set; }
 
         public AssignmentResultModel(ApplicationDbContext context)
         {
@@ -23,6 +24,7 @@ namespace CourseManagement.Pages
         public void OnGet(int submissionId)
         {
             Submission = _context.Submissions.FirstOrDefault(s => s.SubmissionId == submissionId);
+            CourseId = _context.Assignments.Where(c => c.AssignmentId == Submission.AssignmentId).Select(c => c.CourseId).FirstOrDefault();
         }
     }
 }
