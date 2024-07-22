@@ -1,0 +1,121 @@
+﻿@page "{id:int}"
+@model CourseManagement.Areas.Teacher.Pages.Courses.StudentsGradesModel
+@{
+    ViewData["Title"] = "Student Grades";
+    Layout = "~/Areas/Teacher/Pages/Shared/_TeacherLayout.cshtml";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Student Grades</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Student Grades</h1>
+
+        @if (Model.StudentGrades != null && Model.StudentGrades.Any())
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student</th>
+                        <th>Assignment</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.StudentGrades)
+                    {
+                        var assignments = student.Value;
+                        for (int i = 0; i < assignments.Count; i++)
+                        {
+                            if (i == 0)
+                            {
+                                <tr>
+                                    <td rowspan="@assignments.Count">@student.Key</td>
+                                    <td>@assignments[i].AssignmentTitle</td>
+                                    <td>@(assignments[i].Grade.HasValue ? assignments[i].Grade.Value.ToString("F2") : "N/A")</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>@assignments[i].AssignmentTitle</td>
+                                    <td>@(assignments[i].Grade.HasValue ? assignments[i].Grade.Value.ToString("F2") : "N/A")</td>
+                                </tr>
+                            }
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No grades available.</p>
+        }
+    </div>
+</body>
+
+<style>
+    /* Ensure body has some default styling */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+    }
+
+    /* Container for the content */
+    .container {
+        width: 80%;
+        margin: auto;
+        overflow: hidden;
+        padding: 20px;
+    }
+
+    /* Styling for the table */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+        color: #333;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    tr:hover {
+        background-color: #f1f1f1;
+    }
+
+    td[rowspan] {
+        vertical-align: middle;
+    }
+
+    /* Styling for the header */
+    h1 {
+        color: #333;
+        text-align: center;
+        margin-top: 20px;
+        font-size: 2em;
+    }
+
+</style>
+</html>
+

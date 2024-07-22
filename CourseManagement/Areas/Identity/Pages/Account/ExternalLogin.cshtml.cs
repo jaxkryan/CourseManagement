@@ -133,7 +133,6 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             var user = await _signInManager.UserManager.GetUserAsync(User);
             if (info.Equals(null))
             {
-               // Console.WriteLine("DITME MAY NULLLLLLLLLLLLL ROIIIIIIIIIII");
                 ErrorMessage = "Lỗi thông tin từ dịch vụ đăng nhập.";
                 return RedirectToPage("./Login", new { ReturnUrl = returnUrl });
             }
@@ -145,6 +144,32 @@ namespace CourseManagement.Areas.Identity.Pages.Account
             {
                 // User đăng nhập thành công vào hệ thống theo thông tin info
                 _logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+
+                // Retrieve the user
+                var userWithexternalMail = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
+
+                if (userWithexternalMail != null)
+                {
+                    var roles = await _userManager.GetRolesAsync(userWithexternalMail);
+
+                    if (roles.Contains("student"))
+                    {
+                        returnUrl = "/Student/Index";
+                    }
+                    else if (roles.Contains("admin"))
+                    {
+                        returnUrl = "/Admin/Index";
+                    }
+                    else if (roles.Contains("teacher"))
+                    {
+                        returnUrl = "/Teacher/Index";
+                    }
+                    else if (roles.Contains("parent"))
+                    {
+                        returnUrl = "/Parent/Index";
+                    }
+                }
+
                 return LocalRedirect(returnUrl);
             }
             else

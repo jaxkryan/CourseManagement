@@ -51,20 +51,20 @@ public class WebUser : IdentityUser
         public DateTime EnrolledAt { get; set; } = DateTime.UtcNow;
     }
 
-    public class Lesson
-    {
-        public int LessonId { get; set; }
+        public class Lesson
+        {
+            public int LessonId { get; set; }
 
-        [ForeignKey("Course")]
-        public int CourseId { get; set; }
-        public Course? Course { get; set; }
+            [ForeignKey("Course")]
+            public int CourseId { get; set; }
+            public Course? Course { get; set; }
 
-        public string LessonTitle { get; set; }
-        public string Content { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public string? Link { get; set; }
-        public string Level { get; set; }
-    }
+            public string LessonTitle { get; set; }
+            public string Content { get; set; }
+            public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+            public string? Link { get; set; }
+            public string Level { get; set; }
+        }
     public class Assignment
     {
         public int AssignmentId { get; set; }
@@ -104,6 +104,8 @@ public class WebUser : IdentityUser
         public string Content { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
         public float? Grade { get; set; }
+
+        public virtual ICollection<StudentResponse> StudentResponses { get; set; }
     }
 
     public class Teacher
@@ -148,5 +150,18 @@ public class WebUser : IdentityUser
         public string Opt4 { get; set; }
         public string Correctans { get; set; }
         public virtual ICollection<AssignmentQuestion>? AssignmentQuestions { get; set; } // New navigation property
+    }
+
+    public class StudentResponse
+    {
+        public int StudentResponseId { get; set; }
+        [ForeignKey("Submission")]
+        public int SubmissionId { get; set; }
+        public Submission Submission { get; set; }
+        [ForeignKey("Question")]
+        public int QuestionId { get; set; }
+        public Question Question { get; set; }
+        public string SelectedAnswer { get; set; }
+        public bool IsCorrect { get; set; }
     }
 }

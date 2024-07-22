@@ -22,9 +22,22 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
             _context = context;
         }
 
-        public IList<Course> Course { get; set; }
+        public PaginatedList<Course> PaginatedCourses { get; set; }
 
-        public async Task OnGetAsync()
+        // Pagination properties
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 10; // Number of items per page
+
+        // Search properties
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public DateTime? StartDate { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public DateTime? EndDate { get; set; }
+
+        public async Task OnGetAsync(int pageIndex = 1, string searchString = null, DateTime? startDate = null, DateTime? endDate = null)
         {
             // Get the current user's email
             var email = User.Identity.Name;
@@ -37,19 +50,40 @@ namespace CourseManagement.Areas.Teacher.Pages.Courses
                 if (currentUser != null)
                 {
                     // Filter courses by the current user's ID
-                    Course = await _context.Courses
-                        .Where(c => c.InstructorId == currentUser.Id)
-                        .Include(c => c.Instructor)
-                        .ToListAsync();
+                    var coursesQuery = _context.Courses
+                        .Where(c => c.InstructorId == currentUser.Id);
+
+                    // Apply search filter
+                    if (!string.IsNullOrEmpty(searchString))
+                    {
+                        coursesQuery = coursesQuery.Where(c => c.CourseName.Contains(searchString)
+                                                            || c.Description.Contains(searchString));
+                    }
+
+                    // Apply date filter
+                    if (startDate.HasValue)
+                    {
+                        coursesQuery = coursesQuery.Where(c => c.CreatedAt >= startDate.Value);
+                    }
+                    if (endDate.HasValue)
+                    {
+                        coursesQuery = coursesQuery.Where(c => c.CreatedAt <= endDate.Value);
+                    }
+
+                    // Include instructor information
+                    coursesQuery = coursesQuery.Include(c => c.Instructor);
+
+                    // Create a paginated list of courses
+                    PaginatedCourses = await PaginatedList<Course>.CreateAsync(coursesQuery, pageIndex, PageSize);
                 }
                 else
                 {
-                    Course = new List<Course>();
+                    PaginatedCourses = new PaginatedList<Course>(new List<Course>(), 1, 0, 0);
                 }
             }
             else
             {
-                Course = new List<Course>();
+                PaginatedCourses = new PaginatedList<Course>(new List<Course>(), 1, 0, 0);
             }
         }
 

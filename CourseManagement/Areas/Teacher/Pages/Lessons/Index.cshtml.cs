@@ -22,9 +22,14 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
             _userManager = userManager;
         }
 
-        public IList<Lesson> Lesson { get; set; }
+        public PaginatedList<Lesson> PaginatedLessons { get; set; }
 
-        public async Task OnGetAsync()
+        // Pagination properties
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 10; // Number of items per page
+
+        public async Task OnGetAsync(int pageIndex = 1)
         {
             // Get the current user's email
             var email = User.Identity.Name;
@@ -45,19 +50,21 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
                     var courseIds = userCourses.Select(c => c.CourseId).ToList();
 
                     // Retrieve the lessons related to these courses
-                    Lesson = await _context.Lessons
+                    var lessonsQuery = _context.Lessons
                         .Where(l => courseIds.Contains(l.CourseId)) // Adjust the property name if needed
-                        .Include(l => l.Course) // Include related course if needed
-                        .ToListAsync();
+                        .Include(l => l.Course); // Include related course if needed
+
+                    // Create a paginated list of lessons
+                    PaginatedLessons = await PaginatedList<Lesson>.CreateAsync(lessonsQuery, pageIndex, PageSize);
                 }
                 else
                 {
-                    Lesson = new List<Lesson>();
+                    PaginatedLessons = new PaginatedList<Lesson>(new List<Lesson>(), 1, 0, 0);
                 }
             }
             else
             {
-                Lesson = new List<Lesson>();
+                PaginatedLessons = new PaginatedList<Lesson>(new List<Lesson>(), 1, 0, 0);
             }
         }
     }

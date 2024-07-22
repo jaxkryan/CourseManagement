@@ -22,7 +22,9 @@
         @foreach (var item in Model.AssignmentQuestions)
         {
             <tr>
-                <td>@item.Question.Qid</td>
+                <td>
+                    <a asp-page="/Questions/Details" asp-route-id="@item.Question.Qid">@item.Question.Qid</a>
+                </td>
                 <td>
                     <a asp-page="./Edit" asp-route-assignmentId="@item.AssignmentId" asp-route-questionId="@item.QuestionId">Edit</a> |
                     <a asp-page="./Delete" asp-route-assignmentId="@item.AssignmentId" asp-route-questionId="@item.QuestionId">Delete</a>
