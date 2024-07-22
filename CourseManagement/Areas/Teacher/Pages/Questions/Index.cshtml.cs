@@ -12,21 +12,39 @@ namespace CourseManagement.Areas.Teacher.Pages.Questions
 {
     public class IndexModel : PageModel
     {
-        private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public IndexModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+        public IndexModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public IList<Question> Question { get;set; } = default!;
+        public PaginatedList<Question> PaginatedQuestions { get; set; }
 
-        public async Task OnGetAsync()
+        // Pagination properties
+        [BindProperty(SupportsGet = true)]
+        public int PageIndex { get; set; } = 1;
+        public int PageSize { get; set; } = 10; // Number of items per page
+
+        // Search properties
+        [BindProperty(SupportsGet = true)]
+        public string SearchString { get; set; }
+
+        public async Task OnGetAsync(int pageIndex = 1, string searchString = null)
         {
-            if (_context.Questions != null)
+            var questionsQuery = _context.Questions.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchString))
             {
-                Question = await _context.Questions.ToListAsync();
+                questionsQuery = questionsQuery.Where(q => q.QContent.Contains(searchString)
+                                                        || q.Opt1.Contains(searchString)
+                                                        || q.Opt2.Contains(searchString)
+                                                        || q.Opt3.Contains(searchString)
+                                                        || q.Opt4.Contains(searchString)
+                                                        || q.Correctans.Contains(searchString));
             }
+
+            PaginatedQuestions = await PaginatedList<Question>.CreateAsync(questionsQuery, pageIndex, PageSize);
         }
     }
 }
