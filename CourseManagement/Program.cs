@@ -2,6 +2,7 @@ using CourseManagement.Models;
 using CourseManagement.EmailSender;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authentication.Cookies;
+//using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,27 +19,22 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     options.UseSqlServer(connectionString);
+
 });
 
 builder.Services.AddDefaultIdentity<WebUser>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+
 var services = builder.Services;
 var configuration = builder.Configuration;
-services.AddOptions(); // Kích hoạt Options
+services.AddOptions();                                        // Kích hoạt Options
 var mailsettings = builder.Configuration.GetSection("MailSettings");
 services.AddTransient<ISendMailService, SendMailService>();
 services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
-services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.ExpireTimeSpan = TimeSpan.FromHours(1);
-        options.SlidingExpiration = true;
-        options.LoginPath = "/Identity/Account/Login";
-        options.LogoutPath = "/Identity/Account/Logout";
-    })
+services.AddAuthentication()
     .AddGoogle(googleOptions =>
     {
         IConfigurationSection googleAuthNSection = configuration.GetSection("Authentication:Google");
@@ -53,10 +49,9 @@ services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             context.Response.Redirect(redirectUrl);
             return Task.CompletedTask;
         };
-    });
 
-services.Configure<IdentityOptions>(options =>
-{
+    });
+services.Configure<IdentityOptions>(options => {
     // Thiết lập về Password
     options.Password.RequireDigit = false; // Không bắt phải có số
     options.Password.RequireLowercase = false; // Không bắt phải có chữ thường
@@ -76,11 +71,20 @@ services.Configure<IdentityOptions>(options =>
     options.User.RequireUniqueEmail = true;  // Email là duy nhất
 
     // Cấu hình đăng nhập.
-    options.SignIn.RequireConfirmedEmail = true; // Cấu hình xác thực địa chỉ email (email phải tồn tại)
-    options.SignIn.RequireConfirmedPhoneNumber = false; // Xác thực số điện thoại
+    options.SignIn.RequireConfirmedEmail = true;            // Cấu hình xác thực địa chỉ email (email phải tồn tại)
+    options.SignIn.RequireConfirmedPhoneNumber = false;     // Xác thực số điện thoại
     options.SignIn.RequireConfirmedAccount = true;
 });
-
+//builder.Services.AddAuthentication(options =>
+//{
+//    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+//    options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+//}).AddCookie()
+//.AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+//{
+//    options.ClientId = builder.Configuration.GetSection("Google: ClientId").Value;
+//    options.ClientSecret = builder.Configuration.GetSection("Google: ClientSecret").Value;
+//});
 var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -90,13 +94,18 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-app.UseAuthentication();
+app.UseAuthentication(); ;
+
 app.UseAuthorization();
 
 app.MapRazorPages();
 
 app.Run();
+
+
+
