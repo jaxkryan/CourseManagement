@@ -101,8 +101,6 @@ public class WebUser : IdentityUser
         [ForeignKey("User")]
         public string UserId { get; set; }
         public WebUser User { get; set; }
-
-        public string Content { get; set; }
         public DateTime SubmittedAt { get; set; } = DateTime.UtcNow;
         public float? Grade { get; set; }
 
@@ -157,8 +155,8 @@ public class WebUser : IdentityUser
     {
         public int StudentResponseId { get; set; }
         [ForeignKey("Submission")]
-        public int SubmissionId { get; set; }
-        public Submission Submission { get; set; }
+        public int? SubmissionId { get; set; }
+        public Submission? Submission { get; set; }
         [ForeignKey("Question")]
         public int QuestionId { get; set; }
         public Question Question { get; set; }
