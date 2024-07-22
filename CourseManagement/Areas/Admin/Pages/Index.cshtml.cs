@@ -78,10 +78,12 @@ namespace CourseManagement.Areas.Admin.Pages
             }
 
             var roles = await _userManager.GetRolesAsync(user);
-            //if (!roles.Contains("teacher"))
-            //{
-            //    return BadRequest("Only teachers can be disabled.");
-            //}
+
+            if (!roles.Contains("admin"))
+            {
+                return BadRequest("Admin can't be disabled.");
+            }
+
 
             user.IsActive = false;
             await _userManager.UpdateAsync(user);
@@ -103,6 +105,7 @@ namespace CourseManagement.Areas.Admin.Pages
             }
 
             var roles = await _userManager.GetRolesAsync(user);
+
             //if (!roles.Contains("teacher"))
             //{
             //    return BadRequest("Only teachers can be activated.");

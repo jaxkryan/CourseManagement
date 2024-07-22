@@ -1,78 +1,142 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using CourseManagement.Models;
+using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 using CourseManagement.Pages.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Admin.Pages
 {
+    [Authorize(Roles = "admin")]
     public class EditModel : PageModel
     {
-        private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
+        private readonly UserManager<WebUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+        public EditModel(UserManager<WebUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
+            _userManager = userManager;
+            _roleManager = roleManager;
             _context = context;
         }
 
         [BindProperty]
-        public CourseManagement.Models.Teacher Teacher { get; set; } = default!;
+        public InputModel Input { get; set; }
+
+        public class InputModel
+        {
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
+            [EmailAddress]
+            [Display(Name = "Email")]
+            public string Email { get; set; }
+
+            [Required]
+            [DataType(DataType.Date)]
+            [Display(Name = "Date of Birth")]
+            public DateTime Dob { get; set; }
+
+            [Required]
+            public string Address { get; set; }
+
+            [Required]
+            public string Qualification { get; set; }
+
+            [Required]
+            public string Biography { get; set; }
+        }
 
         public async Task<IActionResult> OnGetAsync(string id)
         {
-            if (id == null || _context.Teachers == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var teacher =  await _context.Teachers.FirstOrDefaultAsync(m => m.TeacherId == id);
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.TeacherId == id);
             if (teacher == null)
             {
                 return NotFound();
             }
-            Teacher = teacher;
-           ViewData["TeacherId"] = new SelectList(_context.Users, "Id", "Id");
+
+            Input = new InputModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                Dob = user.Dob,
+                Address = user.Address,
+                Qualification = teacher.Qualification,
+                Biography = teacher.Biography
+            };
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnPostAsync(string id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            _context.Attach(Teacher).State = EntityState.Modified;
-
-            try
+            var user = await _userManager.FindByIdAsync(id);
+            if (user == null)
             {
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
-            catch (DbUpdateConcurrencyException)
+
+            var teacher = await _context.Teachers.FirstOrDefaultAsync(t => t.User.Id == id);
+            if (teacher == null)
             {
-                if (!TeacherExists(Teacher.TeacherId))
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                user.FirstName = Input.FirstName;
+                user.LastName = Input.LastName;
+                user.Email = Input.Email;
+                user.Dob = Input.Dob;
+                user.Address = Input.Address;
+
+                teacher.Qualification = Input.Qualification;
+                teacher.Biography = Input.Biography;
+
+                var result = await _userManager.UpdateAsync(user);
+                if (result.Succeeded)
                 {
-                    return NotFound();
+                    _context.Teachers.Update(teacher);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToPage("./Index");
                 }
-                else
+
+                foreach (var error in result.Errors)
                 {
-                    throw;
+                    ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
 
-            return RedirectToPage("./Index");
-        }
-
-        private bool TeacherExists(string id)
-        {
-          return (_context.Teachers?.Any(e => e.TeacherId == id)).GetValueOrDefault();
+            return Page();
         }
     }
 }

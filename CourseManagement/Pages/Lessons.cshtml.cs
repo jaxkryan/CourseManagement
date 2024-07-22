@@ -36,6 +36,15 @@ namespace CourseManagement.Pages
             CID = courseid;
             ViewData["Cname"] = _context.Courses.Where(c => c.CourseId == courseid).Select(c => c.CourseName).FirstOrDefault();
             await LoadLessonsAsync();
+            var currentUser = await _userManager.GetUserAsync(User);
+            Enrollment enrollment = new Enrollment
+            {
+                CourseId = courseid,
+                UserId  = currentUser.Id,
+                EnrolledAt = DateTime.Now,
+            };
+            _context.Enrollments.Add(enrollment);
+            _context.SaveChanges();
             return Page();
         }
 

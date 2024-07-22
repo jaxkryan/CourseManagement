@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CourseManagement.Areas.Teacher.Pages.Lessons
 {
+    [Authorize(Roles = "teacher")]
     public class IndexModel : PageModel
     {
         private readonly ApplicationDbContext _context;
