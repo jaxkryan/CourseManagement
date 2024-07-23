@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseManagement.Areas.Teacher.Pages.Lessons
 {
@@ -15,10 +16,13 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
     public class EditModel : PageModel
     {
         private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
+        private readonly UserManager<WebUser> _userManager;
 
-        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+
+        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context,UserManager<WebUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -31,17 +35,41 @@ namespace CourseManagement.Areas.Teacher.Pages.Lessons
                 return NotFound();
             }
 
+            // Get the current user's email
+            var email = User.Identity.Name;
+            if (email == null)
+            {
+                return NotFound();
+            }
+
+            // Retrieve the current user
+            var currentUser = await _userManager.FindByEmailAsync(email);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
             Lesson = await _context.Lessons
-                .Include(l => l.Course).FirstOrDefaultAsync(m => m.LessonId == id);
+                .Include(l => l.Course)
+                .FirstOrDefaultAsync(m => m.LessonId == id);
 
             if (Lesson == null)
             {
                 return NotFound();
             }
 
-            // Populate CourseId dropdown list
-            ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
+            // Get courses created by the current user
+            var userCourses = await _context.Courses
+                .Where(c => c.InstructorId == currentUser.Id)
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CourseId.ToString(),
+                    Text = c.CourseName
+                })
+                .ToListAsync();
 
+            // Set the courses in ViewData
+            ViewData["CourseId"] = new SelectList(userCourses, "Value", "Text");
 
             return Page();
         }

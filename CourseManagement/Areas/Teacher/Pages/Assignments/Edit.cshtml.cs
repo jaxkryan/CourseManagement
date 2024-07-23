@@ -9,17 +9,20 @@ using Microsoft.EntityFrameworkCore;
 using CourseManagement.Models;
 using CourseManagement.Pages.Service;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace CourseManagement.Areas.Teacher.Pages.Assignments
 {
     [Authorize(Roles = "teacher")]
     public class EditModel : PageModel
     {
-        private readonly CourseManagement.Pages.Service.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<WebUser> _userManager;
 
-        public EditModel(CourseManagement.Pages.Service.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context, UserManager<WebUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         [BindProperty]
@@ -32,19 +35,29 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
                 return NotFound();
             }
 
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return NotFound();
+            }
+
             Assignment = await _context.Assignments
-                .Include(a => a.Course).FirstOrDefaultAsync(m => m.AssignmentId == id);
+                .Include(a => a.Course)
+                .FirstOrDefaultAsync(m => m.AssignmentId == id && m.Course.InstructorId == currentUser.Id);
 
             if (Assignment == null)
             {
                 return NotFound();
             }
-           ViewData["CourseId"] = new SelectList(_context.Courses, "CourseId", "CourseName");
+
+            ViewData["CourseId"] = new SelectList(await _context.Courses
+                .Where(c => c.InstructorId == currentUser.Id)
+                .Select(c => new { c.CourseId, c.CourseName })
+                .ToListAsync(), "CourseId", "CourseName");
+
             return Page();
         }
 
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
@@ -52,25 +65,51 @@ namespace CourseManagement.Areas.Teacher.Pages.Assignments
                 return Page();
             }
 
-            _context.Attach(Assignment).State = EntityState.Modified;
-
-            try
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!AssignmentExists(Assignment.AssignmentId))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                return NotFound();
             }
 
-            return RedirectToPage("./Index");
+            var assignmentToUpdate = await _context.Assignments
+                .Include(a => a.Course)
+                .FirstOrDefaultAsync(m => m.AssignmentId == Assignment.AssignmentId && m.Course.InstructorId == currentUser.Id);
+
+            if (assignmentToUpdate == null)
+            {
+                return NotFound();
+            }
+
+            if (await TryUpdateModelAsync<Assignment>(
+                assignmentToUpdate,
+                "Assignment",
+                a => a.AssignmentTitle, a => a.Description, a => a.DueDate, a => a.CourseId))
+            {
+                try
+                {
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AssignmentExists(Assignment.AssignmentId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToPage("./Index");
+            }
+
+            // If we got this far, something failed, redisplay form
+            ViewData["CourseId"] = new SelectList(await _context.Courses
+                .Where(c => c.InstructorId == currentUser.Id)
+                .Select(c => new { c.CourseId, c.CourseName })
+                .ToListAsync(), "CourseId", "CourseName");
+
+            return Page();
         }
 
         private bool AssignmentExists(int id)
